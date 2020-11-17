@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+{% import 'healthcare/buttons.twig' as button %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block headline %}{{ title }}{% endblock %}
+{% block body %}
+
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+
+        <div class="form-group {% if not form.vars.valid %}has-error{% endif %}">
+            {{ form_label(form.date) }}
+            <div class="col-sm-10">
+                <div class='input-group date' id='datetimepicker'>
+                    {{ form_widget(form.date)}}
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+                {{ form_errors(form.date) }}
+            </div>
+        </div>
+
+        {{ form_row(form.comment) }}
+
+        {{ button.sumit_form() }}
+
+        
+
+    {{ form_end(form) }}
+
+
+    <script type="text/javascript">
+        
+        var min = new Date();
+        min.setDate( min.getDate() - 7 );
+
+        $("#datetimepicker").datetimepicker({ //https://eonasdan.github.io/bootstrap-datetimepicker/
+            date: new Date(),
+            format:'HH:mm DD/MM/YYYY', //http://momentjs.com/docs/#/displaying/format/
+            locale: 'fr', //https://github.com/moment/moment/tree/develop/locale
+            minDate: min,
+            maxDate: new Date()
+        });
+
+
+    </script>
+
+{% endblock %}

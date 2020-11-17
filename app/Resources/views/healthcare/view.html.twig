@@ -1,0 +1,189 @@
+{% extends 'base.html.twig' %}
+{% import 'healthcare/buttons.twig' as button %}
+
+{% block title %}Consulter les soins{% endblock %}
+{% block headline %}Soins de {{ patient.getPrenom }} {{ patient.getNom }} {% endblock %}
+{% block body %}
+
+
+    {# Pour l'overflow du text dans le tableau#}
+    <style>
+        .table {
+            table-layout: fixed;
+        }
+
+        .table td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+
+
+    <table class="table">
+
+        <thead>
+        <tr>
+
+            <th scope="col" class="col-sm-3">Nom du soin</th>
+            <th scope="col" class="col-sm-2">Nombre de séances ce mois</th>
+            <th scope="col" class="col-sm-2">Spécialité</th>
+            <th scope="col" class="col-sm-4">Description</th>
+            <th scope="col" class="col-sm-1">&nbsp;</th>
+            <th hidden>modal</th>
+
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for healthcare in healthcares %}
+            {% if not healthcare.isClosed %}
+
+
+                <tr id='healthcare/{{ healthcare.getId }}'>
+
+                    <td> {{ healthcare.getName }} </td>
+                    <td> {{ healthcare.countThisMonth }}/{{ healthcare.getSessionCount }} </td>
+                    <td> {{ healthcare.getSpeciality.getSpeciality }}</td>
+                    <td> {{ healthcare.getDescription }} </td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-primary btn-xs _test_button_see_more" data-toggle="modal"
+                                data-target='#modal{{ healthcare.getId }}'> Voir plus
+                        </button>
+                    </td>
+
+                </tr>
+
+                <div class="modal fade" id='modal{{ healthcare.getId }}' tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+
+                            <div class="modal-header" style="border-bottom: 0;">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h2 class="modal-title" align="center"> {{ healthcare.getName }} </h2>
+                            </div>
+
+
+                            <div class="modal-body">
+
+
+                                <dl class="dl-horizontal" style="border-color: #337ab7; border-style: solid; padding-top: 15px; padding-bottom: 15px;
+                                border-width: 4px; border-left: 0; border-right: 0">
+                                    <dt>Nom du soin :</dt> <dd class="_test_nom_du_soin"> {{ healthcare.getName }}</dd>
+                                    <dt>Description :</dt> <dd class="_test_description_soin"> {{ healthcare.getDescription }}</dd>
+                                    <dt>Spécialité :</dt> <dd class="_test_specialite_soin"> {{ healthcare.getSpeciality.getSpeciality }}</dd>
+                                </dl>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class='form-group'>
+                                            <div class='input-group' id='datetimepicker{{ healthcare.getId }}'>
+                                                <input type='text' id='datepicker{{ healthcare.getId }}' class="form-control"/>
+                                                <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                {# inserer bar de recherche #}
+                                <dl class="dl-horizontal" id='modal-session'>
+
+                                    <div>
+                                        {% set actualDate = "" %}
+                                        {% for session in healthcare.getSessions | sortbyfield('date') %}
+
+                                        {% if actualDate != session.getDate | date('Y m') %}
+                                        {% set actualDate = session.getDate | date('Y m') %}
+                                        {% set count = 0 %}
+                                        {% for session2 in healthcare.getSessions | sortbyfield('date') %}
+                                            {% if session2.getDate | date('Y m') == actualDate %}
+                                                {% set count = count + 1 %}
+                                            {% endif %}
+
+                                        {% endfor %}
+                                    </div>
+                                    <div id="{{ session.getDate | date('m/Y') }}" class="myMonth{{ healthcare.getId }}">
+                                        <h2>{{ session.getDate | localizeddate('medium', 'none', null, null, 'MMMM Y') }}
+                                            <small>{{ count }}/{{ healthcare.getSessionCount }}</small>
+                                        </h2>
+                                        {% endif %}
+
+                                        <div class="well">
+                                            <dt>Médical de la séance :</dt>
+                                            <dd class="_test_valide_medical_seance"> {{ session.getCaregiver.getUserName }}</dd>
+                                            <dt>Date :</dt>
+                                            <dd> {{ session.getDate| date('H:i d/m/Y') }} </dd>
+                                            <dt>Commentaire :</dt>
+                                            <dd class="_test_valide_commentaire"> {{ session.getComment }} </dd>
+                                        </div>
+
+                                        {% endfor %}
+                                    </div>
+
+                                </dl>
+
+                            </div>
+
+                            <div class="modal-footer">
+
+                                {% if is_granted('ROLE_SECRETARY') %}
+
+                                    {{ button.close_healthcare(healthcare) }}
+
+                                {% else %}
+
+                                    {{ button.add_healthsession(healthcare) }}
+
+                                {% endif %}
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            {% endif %}
+
+            <script type="text/javascript">
+
+                $("#datetimepicker{{ healthcare.getId }}").datetimepicker({ //https://eonasdan.github.io/bootstrap-datetimepicker/
+                    date: new Date(),
+                    format: 'MM/YYYY', //http://momentjs.com/docs/#/displaying/format/
+                    locale: 'fr', //https://github.com/moment/moment/tree/develop/locale
+                    maxDate: new Date()
+                }).on('dp.change' ,function () {
+                    let e = document.getElementById('datepicker{{ healthcare.getId }}').value;
+                    let months = document.getElementsByClassName('myMonth{{ healthcare.getId }}');
+                    for (let elem of months){
+                        if (elem.id !== e){
+                            elem.style.display = "none";
+                        }
+                        else {
+                            elem.style.display = "block";
+                        }
+                    }
+                });
+                
+            </script>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+    {% if is_granted('ROLE_SECRETARY') or is_granted('ROLE_MEDICAL') %}
+
+        {{ button.add_healthcare() }}
+
+    {% endif %}
+
+
+{% endblock %}

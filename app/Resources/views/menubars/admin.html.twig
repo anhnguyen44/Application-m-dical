@@ -1,0 +1,29 @@
+
+<ul class="nav nav-pills">
+    <li><a href="{{ path('admin') }}"><b>Ajouter un utilisateur</b></a></li>
+    <li><a href="{{ path('view_users') }}"><b>Voir les comptes</b></a></li>
+    <li class="dropdown">
+        <a class="dropdown" data-toggle="dropdown" href="#"><b>Gérer les spécialités</b>
+            <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li><a href="{{ path('managespeciality') }}">Ajouter une spécialité</a></li>
+            <li><a href="{{ path('viewspeciality') }}">Lister les spécialités existantes</a></li>
+        </ul>
+    </li>
+    <li><a href="{{ path('edituser') }}"><b>Modifier un mot de passe</b></a></li>
+    <li class="dropdown">
+        <a class="dropdown" data-toggle="dropdown" href="#"><b>Sauvegarder les données</b>
+            <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li><a href="{{ path('createBackup') }}">Réaliser une sauvegarde</a></li>
+            <li><a href="{{ path('listBackup') }}">Gérer les sauvegardes</a></li>
+            <li><a href="{{ path('uploadBackup') }}">Uploader une sauvegarde</a></li>
+            <li><a href="{{ path('configBackup') }}">Configurer la sauvegarde</a></li>
+        </ul>
+    </li>
+
+    <!-- Ajout d'un bouton appelant le controlleur encryptAllFilesAction -->
+    <li>
+        <a href="{{ path('encryptAllFiles') }}"><b>Chiffrer les données</b></a>
+    </li>
+</ul>

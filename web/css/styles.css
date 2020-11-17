@@ -1,0 +1,143 @@
+
+.form-signin {
+    margin: 0 auto;
+    max-width: 400px;
+}
+
+.navbar-login {
+    width: 305px;
+    padding: 10px;
+    padding-bottom: 0px;
+}
+
+.navbar-login-session {
+    padding: 10px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+
+.icon-size {
+    font-size: 87px;
+}
+
+.header {
+    background-image: url('../img/pattern.png');
+    background-repeat: repeat;
+    height: 70px;
+}
+
+
+body {
+    margin-top: 50px;
+    background-image: url('../img/pattern-body.png');
+    background-repeat: repeat;
+}
+
+.glyphicon {
+    margin-right: 10px;
+}
+
+.panel-body {
+    padding: 0px !important;
+}
+
+.panel-body table tr td {
+    padding-left: 15px
+}
+
+.panel-body .table {
+    vertical-align: middle;
+    margin-bottom: 0px;
+}
+
+.logo {
+    width: 80px;
+    height: 70px !important;
+    padding-top: 5px;
+
+}
+
+a.navbar-brand {
+    font-size: 35px !important;
+    margin-top: 10px;
+    position: fixed;
+    color: white !important;
+}
+
+.page-body {
+    margin-top: 100px;
+}
+
+.nav {
+    margin-top: 1% !important;
+}
+
+.dropdown-toggle {
+    color: white !important;
+}
+
+a.handsOn:hover {
+    cursor: pointer;
+}
+
+
+h3{
+    font-size: 20px;
+    border-radius: 5px 5px;
+    padding-top: 8px;
+    padding-left: 30px;
+    height: 40px;
+}
+
+
+
+
+.flexrow {
+    display: flex;
+    align-items: center;
+    flex-flow: row wrap;
+}
+
+.thumbVideo {
+    display: block;
+    padding: 4px;
+    margin-bottom: 20px;
+    line-height: 1.42857143;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    -webkit-transition: border .2s ease-in-out;
+    -o-transition: border .2s ease-in-out;
+    transition: border .2s ease-in-out;
+}
+
+/* Images displaying */
+.modal-dialog {
+}
+
+.thumbnail {
+    margin-bottom: 6px;
+}
+
+.carousel-control.left, .carousel-control.right {
+    background-image: none;
+}
+
+.notify{
+    position: fixed;
+    bottom: 20px;
+    right: 100px;
+    background-image: url('../img/pattern.png');
+    background-repeat: repeat;
+    color: white;
+}
+
+.footer {
+    position: static;
+    /* right: 0;
+    bottom: 0;
+    left: 0; */
+    padding: 1rem;
+    background-color: #efefef;
+    text-align: center;
+}

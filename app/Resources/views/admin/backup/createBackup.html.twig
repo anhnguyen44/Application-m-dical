@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sauvegarde{% endblock %}
+{% block headline %}Réaliser une sauvegarde{% endblock %}
+
+{% block body %}
+
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+   
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">
+                    Clé de chiffrement 
+                    <a href="#" class="link tooltip-link" data-toggle="tooltip" data-original-title="La clé doit avoir au moins 6 caractères">
+                        <span class="glyphicon glyphicon-info-sign"></span>
+                    </a>
+                </label>
+                
+                <div class="col-sm-10">
+                    <a class="handsOn">
+                        {{ form_widget(form.Cledechiffrement) }}
+                        {{ form_errors(form.Cledechiffrement) }}
+                    </a>
+                </div>
+            </div>
+
+    {{ form_widget(form.Cledechiffrement) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+{% import 'healthcare/buttons.twig' as button %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block headline %}{{ title }}{% endblock %}
+{% block body %}
+
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+        
+        {{ form_row(form.name) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.sessionCount) }}
+        {{ form_row(form.speciality) }}
+        {{ button.sumit_form() }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

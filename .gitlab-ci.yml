@@ -1,0 +1,66 @@
+cache:
+    untracked: true
+    paths: 
+        - vendor/
+
+testfoncadmin:
+    tags:
+        - main
+    script: 
+        - rmdir /S /Q C:\wamp64\www\webmedical
+        - mkdir C:\wamp64\www\webmedical
+        - xcopy /e /s . C:\wamp64\www\webmedical
+        - cd C:\wamp64\www\webmedical
+        - call composer install
+        # On get une premiere fois la page, ce qui permet que le site se setup bien
+        # apparement nécessaire apres un composer install ...
+        - curl http://webmedical/
+        - C:\wamp64\bin\mysql\mysql5.7.23\bin\mysql.exe -u root -e "use mesurelocal; source tests/populate.sql;"
+        - python .\tests\FunctionalTesting\admin.py
+
+
+testfoncparamedical:
+    tags:
+        - main
+    script:
+        - rmdir /S /Q C:\wamp64\www\webmedical
+        - mkdir C:\wamp64\www\webmedical
+        - xcopy /e /s . C:\wamp64\www\webmedical
+        - cd C:\wamp64\www\webmedical
+        - call composer install
+        # On get une premiere fois la page, ce qui permet que le site se setup bien
+        # apparement nécessaire apres un composer install ...
+        - curl http://webmedical/
+        - C:\wamp64\bin\mysql\mysql5.7.23\bin\mysql.exe -u root -e "use mesurelocal; source tests/populate.sql;"
+        - python .\tests\FunctionalTesting\paramedical.py
+
+testfoncsecretaire:
+    tags:
+        - main
+    script:
+        - rmdir /S /Q C:\wamp64\www\webmedical
+        - mkdir C:\wamp64\www\webmedical
+        - xcopy /e /s . C:\wamp64\www\webmedical
+        - cd C:\wamp64\www\webmedical
+        - call composer install
+        # On get une premiere fois la page, ce qui permet que le site se setup bien
+        # apparement nécessaire apres un composer install ...
+        - curl http://webmedical/
+        - C:\wamp64\bin\mysql\mysql5.7.23\bin\mysql.exe -u root -e "use mesurelocal; source tests/populate.sql;"
+        - python .\tests\FunctionalTesting\secretaire.py
+
+testfoncmedecin:
+    tags:
+        - main
+    script:
+        - rmdir /S /Q C:\wamp64\www\webmedical
+        - mkdir C:\wamp64\www\webmedical
+        - xcopy /e /s . C:\wamp64\www\webmedical
+        - cd C:\wamp64\www\webmedical
+        - call composer install
+        # On get une premiere fois la page, ce qui permet que le site se setup bien
+        # apparement nécessaire apres un composer install ...
+        - curl http://webmedical/
+        - C:\wamp64\bin\mysql\mysql5.7.23\bin\mysql.exe -u root -e "use mesurelocal; source tests/populate.sql;"
+        - python .\tests\FunctionalTesting\medecin.py
+        

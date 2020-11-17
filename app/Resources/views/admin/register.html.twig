@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Création d'un nouvel utilisateur{% endblock %}
+{% block headline %}Ajouter un nouvel utilisateur{% endblock %}
+{% block body  %}
+ 
+ 
+    {% if form == null %}
+
+        <div class="alert alert-success" role="alert">
+
+            <p>L'utilisateur a été ajouté avec succès !</p>
+            <br>
+            <table class="table-responsive">
+                <tr>
+                    <td>Nom de l'utilisateur :</td>
+                    <td><strong>{{ user.getUsername }}</strong></td>
+                </tr>
+                <tr>
+                    <td> Mot de passe : </td>
+                    <td><strong>{{ password }}</strong></td>
+                </tr>
+            </table>
+        </div>
+        
+    {% else %}
+    
+        <div class="row well">
+            {{ form_start(form, {'attr': {'id': 'form_edit'}}) }}
+            {{ form_errors(form) }}
+
+
+            <table class="table table-responsive">
+                <tr>
+                    <td height="20" align="left" class="col-md-6">Nom d'utilisateur</td>
+                    <td class="col-md-6">{{ form_widget(form.username) }}{{ form_errors(form.username) }}</td>
+                </tr>
+                <tr>
+                    <td height="20" align="left">Spécialité</td>
+                    <td>{{ form_widget(form.speciality) }}</td>
+                </tr>
+                <tr class="selectChoix">
+                    <td height="20" align="left">Notifier par </td>
+                    <td>{{ form_widget(form.notificationType) }}</td>
+                </tr>
+                <tr class="choix1">
+                    <td height="20" align="left">Nombre de notifications</td>
+                    <td>{{ form_widget(form.numberNotifications) }}</td>
+                </tr>
+                <tr class="choix2">
+                    <td height="20" align="left">Evaluateur</td>
+                    <td>
+
+                        <form id="form_show" name="form_show" method="POST">
+
+                            <select title="userId"
+                                    id="userId"
+                                    name="userId"
+                                    class="form-control">
+
+                                {% for user in userlist| sortbyfield('username') %}
+                                    <option id='userId' value='{{ user.getId }}'> {{ user.getUsername }} </option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    <td>
+                    </td>
+                </tr>
+                <tr class="choix3">
+                    <td height="20" align="left">Date</td>
+
+                    <td>{{ form_widget(form.dateNotifications) }}
+                    <div class="hidden">
+                        {{ form_widget(form.numberNotifications) }}
+                    </div>
+                    </td>
+                </tr>
+
+            </table>
+            <div class="hidden">{{ form_widget(form.nonlocked) }} </div>
+
+            {{ form_widget(form.Enregistrer) }}
+
+            {{ form_end(form) }}
+
+        </div>
+    {% endif %}
+
+{% endblock %}

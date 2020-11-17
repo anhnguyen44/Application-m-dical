@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% import 'patient/utilitaire.html.twig' as util %}
+{% import 'patient/buttons.twig' as button %}
+
+{% block title %}Modifier un dossier{% endblock %}
+{% block headline %}Modifier un dossier{% endblock %}
+{% block body %}
+
+    <div class="well">
+        {% set speciality = user.getSpeciality.getSpeciality %}
+
+        {{ form_start(edit_form, {'attr': {'id': 'form_edit', 'enctype': 'multipart/form-data'}}) }}
+            {{ form_errors(edit_form) }}
+
+            {{ util.data(patient, edit, edit_form) }}
+            <p class="text-right">* Champs obligatoires</p>
+            {{ button.validate_edit_patient() }}
+
+        {{ form_end(edit_form) }}
+    </div>
+    
+
+{% endblock %}

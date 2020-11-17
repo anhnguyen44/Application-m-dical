@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Notifications{% endblock %}
+{% block headline %}Notifications{% endblock %}
+{% block body %}
+
+    <div class="row">
+        <table class="table table-responsive">
+
+            {% for notif in notifications %}
+                <tr> 
+
+                    {% set targetName = notif.getTarget.getUserName %}
+                    {% set sourceName = notif.getSource.getUserName %}
+                    {% set patientName = notif.getPatient.getNom %}
+                    {% set patientFirstname = notif.getPatient.getPrenom %}
+                    {% set type = notif.getType %}
+                    {% set patientId = notif.getPatientId %}
+
+                    <td>
+            
+                        {% if type == "share" %}
+                            <form id="viewpatient{{loop.index}}" action="{{ path('viewpatient') }}" method="POST">
+                                    <input type="hidden" name="patientId" value="{{ notif.getPatient.getPatientId }}"/>
+                            </form>
+                            <a class="_test_share_notification" href='#' onclick="document.getElementById('viewpatient{{loop.index}}').submit()">Dr. {{ sourceName }} a partagé le dossier du patient {{ patientName }} {{ patientFirstname }} avec vous.  </a>
+                        
+                        {% elseif type =="cancelShare" %}
+
+                            <p>Dr. {{ sourceName }}  a annulé le partage du dossier du patient {{ patientName }} {{ patientFirstname }} avec vous.</p>
+                        
+                        {% elseif type =="addInfos" %}
+                            <!-- Affichage d'une notification lorsqu'un médecin a accepté une modification -->
+                            <form id="viewpatient{{loop.index}}" action="{{ path('viewpatient') }}" method="POST">
+                                <input type="hidden" name="patientId" value="{{ patientId }}"/>
+                            </form>
+                                <a href='#' onclick="document.getElementById('viewpatient{{loop.index}}').submit()">Le dossier du patient {{ patientName }} {{ patientFirstname }} a été modifié par {{  sourceName }}.  </a>
+
+                        {% elseif type in ["addComment", "addImage",'addVideo', "addFile"] %}
+                                    
+                            <form id="validatepatient{{loop.index}}" action="{{ path('validatepatient') }}" method="GET">
+                                <input type="hidden" name="patientId" value="{{ patientId }}"/>
+                            </form>
+                            
+                            {% if type == "addComment" %}
+                                <a href='#' onclick="document.getElementById('validatepatient{{loop.index}}').submit()">{{ sourceName }} a ajouté un commentaire qui nécessite votre validation dans le dossier du patient {{ patientName }} {{ patientFirstname }} .</a>
+                            {% elseif type =="addImage" %}
+                                <a href='#' onclick="document.getElementById('validatepatient{{loop.index}}').submit()">{{ sourceName }} a ajouté une image qui nécessite votre validation dans le dossier du patient {{ patientName }} {{ patientFirstname }}. </a>
+                            {% elseif type =="addVideo" %}
+                                <a href='#' onclick="document.getElementById('validatepatient{{loop.index}}').submit()">{{ sourceName }} a ajouté une vidéo qui nécessite votre validation dans le dossier du patient {{ patientName }} {{ patientFirstname }}. </a>
+                            {% else %}
+                                <a href='#' onclick="document.getElementById('validatepatient{{loop.index}}').submit()">{{ sourceName }} a ajouté un fichier qui nécessite votre validation dans le dossier du patient {{ patientName }} {{ patientFirstname }}. </a>
+                            {% endif %}
+
+                        {% elseif type == "changeDoc" %}
+
+                            <form id="viewpatient{{loop.index}}" action="{{ path('viewpatient') }}" method="POST">
+                                <input type="hidden" name="patientId" value="{{ patientId }}"/>
+                            </form>
+
+                            <a href='#' onclick="document.getElementById('viewpatient{{loop.index}}').submit()">{{ sourceName }} vous a associé le dossier du patient {{ patientName }} {{ patientFirstname }}.</a>
+
+                        {% elseif type == "addPatients" %}
+
+                            <a href='{{ path('viewpatient') }}'>Dr. {{ sourceName }} vous a associé des dossiers qui nécessitent votre attention.</a>
+                        
+                        {% endif %}
+                    
+                    </td>
+                    
+                    <td>
+                        <form id="form_show" name="form_show" method="POST">
+
+                            <input type="hidden" id='notifId' name="notifId" value='{{ notif.getId }}'>
+                            <input type='submit' value='Supprimer' class="btn btn-danger btn-xs">
+
+                        </form>
+                    </td>
+                
+                </tr>
+            {% endfor %}
+            
+            <tr>
+                <td>
+                
+                    {% if notifications %}
+                        <!-- Ajout d'un bouton pour supprime l'intégralité des notifications -->
+                        
+                        <form id="form_show" name="form_show" method="POST">
+                            <input type="hidden" id='notifId' name="notifId" value='0'>
+                            <input type='submit' value='Supprimer toutes les notifications' class="btn btn-danger btn-xs">
+                        </form>
+                    
+                    {% else %}
+                        
+                        Vous n'avez pas de notifications.
+
+                    {% endif %}
+
+               </td>
+            </tr>
+
+        </table>
+    </div>
+
+{% endblock %}

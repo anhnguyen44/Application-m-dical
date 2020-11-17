@@ -1,0 +1,148 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Partager un dossier{% endblock %}
+{% block headline %}Partager un dossier{% endblock %}
+{% block body %}
+
+    {% if form == null %}
+    <form id="form_show" name="form_show" method="GET">
+        <table class="table table-responsive">
+            <script>
+                function selectInList(select, name)
+                {
+                    var option = select.options[select.selectedIndex];
+                    var ul = select.parentNode.getElementsByTagName('ul')[0];
+
+                    if (option.value == 'ALL') {
+                    while(ul.firstChild)
+                        ul.removeChild(ul.firstChild);
+                    }
+
+                    var choices = ul.getElementsByTagName('input');
+                    for (var i = 0; i < choices.length; i++) {
+                    if (choices[i].value == option.value)
+                        return;
+                    if (choices[i].value == 'ALL')
+                        ul.removeChild(ul.firstChild);
+                        choices[0] = option;
+                    }
+
+                    var li = document.createElement('li');
+                    var input = document.createElement('input');
+                    var text = document.createTextNode(option.firstChild.data);
+                    var butt = document.createElement('button');
+
+                    butt.innerHTML = 'Supprimer';
+                    butt.className += "btn btn-xs btn-danger";
+                    butt.style = 'float:right';
+                    li.style = 'min-height : 30px';
+
+                    input.type = 'hidden';
+                    input.name = name;
+                    input.value = option.value;
+
+                    li.appendChild(input);
+                    if (option.value == 'ALL'){
+                    text = document.createTextNode("Tous ");
+                    }
+
+                    li.appendChild(text);
+                    li.appendChild(butt);
+                    butt.setAttribute('onclick', 'this.parentNode.parentNode.removeChild(this.parentNode);');
+                    ul.appendChild(li);
+                }
+            </script>
+            <tr>
+                <td class="col-md-6">Evaluateurs : </td>
+                <td class="col-md-6">
+                    <ul class="list-unstyled">
+                    </ul>
+                    <select 
+                            onchange="selectInList(this, 'evaluatorSelection[]');"
+                            title="evaluatorId"
+                            id="evaluatorId"
+                            name="evaluatorId"
+                            class="form-control">
+                        <option id='evaluatorId' value="-1"></option>
+                        {% for evaluator in listEvaluator | sortbyfield('speciality') %}
+                            <option id='evaluatorId' value='{{ evaluator.getId }}'>  {{ evaluator.getSpeciality.getSpeciality }} : {{ evaluator.getUsername }} </option>
+                        {% endfor %}
+                        <option id='evaluatorId' value='ALL'> Partager avec tous les évaluateurs </option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-6">Dossier à partager : </td>
+                <td class="col-md-6">
+                    <ul class="list-unstyled">
+                    </ul>
+                    <select 
+                            onchange="selectInList(this, 'patientSelection[]');"
+                            title="patientId"
+                            id="patientId"
+                            name="patientId"
+                            class="form-control">
+                        <option id='patientId' value="-1"></option>
+                        {% for lPatient in listPatient| sortbyfield('nom') %}
+                            <option id='patientId' value='{{ lPatient.getPatientId }}'>{{ lPatient.getNom }} {{ lPatient.getPrenom }} - {{ lPatient.getPatientId }} </option>
+                        {% endfor %}
+                        <option id='patientId' value='ALL'> Partager tous les dossiers </option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-6">Partage temporaire : </td>
+                <td>
+                    <input type= "radio" title="expire" id="expire" name="expire" value=true> Oui
+                    <input type= "radio" title="expire" id="expire" name="expire" value=false checked> Non
+
+                </td>
+            </tr>
+        </table>
+        <br>
+
+        <input type='submit' value='Sélectionner' class="btn btn-default" onclick="alert("coucocu");">
+
+    </form>
+    {% endif %}
+
+    {% if form != null and already != 1 %}
+        {{ form_start(form, {'attr': {'id': 'form_create'}}) }}
+        {{ form_errors(form) }}
+
+        {% if success != 1 %}
+            {% if expire == 'true' %}
+                <table class="table table-responsive">
+                    <tr>
+                        <td>Date d'expiration du partage</td>
+                        <td>
+                            {{ form_widget(form.date) }}
+                        </td>
+                    </tr>
+                </table>
+            {% else %}
+            <table class="table table-responsive">
+                <tr>
+                    <td>
+                        Le partage sera permanent. Voulez-vous continuer ?
+                    </td>
+                </tr>
+                <div class="hidden">{{ form_widget(form.date) }}</div>
+            </table>
+            {% endif %}
+
+            {{ form_widget(form.Partager) }}
+            <a class="btn btn-default" name="retour"  value="Retour" href="{{ path('sharepatient') }}">Retour</a>
+
+        {% else %}
+            <div class="hidden">
+                {{ form_widget(form.date) }}
+                {{ form_widget(form.Partager) }}
+            </div>
+        {% endif %}
+
+
+        {{ form_end(form) }}
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,31 @@
+
+{% macro add_healthcare() %}
+
+    <form action='add' id="form_show" name="form_show" method="GET">
+        <input type='submit' value="Ajouter un soin" class="btn btn-success _test_ajout_soin">
+    </form>
+
+{% endmacro %}
+
+
+{% macro close_healthcare(healthcare) %}
+
+    <form action='{{ healthcare.getId }}/close' id="form_show" name="form_show" method="GET" class="button-close-healthcare">
+        <input type='submit' value="Fermer le soin" class="btn btn-danger _test_fermer_soin">
+    </form>
+
+{% endmacro %}
+
+
+{% macro add_healthsession(healthcare) %}
+
+    <form action='{{ healthcare.getId }}/addsession' id="form_show" name="form_show" method="GET" class="button-add-healthsession">
+        <input type='submit' value="Valider une séance" class="btn btn-success _test_valider_seance">
+    </form>
+
+{% endmacro %}
+
+
+{% macro sumit_form() %}
+    <input type="submit" value="Valider" class="btn btn-success _test_sumit" />
+{% endmacro %}

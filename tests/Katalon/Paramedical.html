@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+	<title>Paramedical</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">login</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://webmedical/<datalist><option>http://webmedical/login</option><option>http://webmedical</option><option>http://webmedical/</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=_username<datalist><option>id=_username</option><option>name=_username</option><option>//input[@id='_username']</option><option>//input</option></datalist></td><td>par1</td>
+</tr>
+<tr><td>type</td><td>id=_password<datalist><option>id=_password</option><option>name=_password</option><option>//input[@id='_password']</option><option>//input[2]</option></datalist></td><td>a</td>
+</tr>
+<tr><td>click</td><td>//button[@type='submit']<datalist><option>//button[@type='submit']</option><option>//button</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Dossier Medical'])[1]/following::p[1]<datalist><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Dossier Medical'])[1]/following::p[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Mes modifications en attente'])[1]/following::p[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Notifications :'])[1]/preceding::p[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Vous avez 1 notification(s) !'])[1]/preceding::p[1]</option><option>//div[2]/div/div/p</option><option>css=p.lead</option></datalist></td><td>Bienvenue sur la base de données locale de l'établissement.</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">view_shared_file</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://webmedical/<datalist><option>http://webmedical/</option><option>http://webmedical/login</option><option>http://webmedical</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>link=Dossiers partagés avec moi<datalist><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Déconnexion'])[1]/following::b[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Gérer les notifications'])[1]/following::b[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Mes modifications en attente'])[1]/preceding::b[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)=concat('Bienvenue sur la base de données locale de l', "'", 'établissement.')])[1]/preceding::b[2]</option><option>//b</option><option>css=b</option><option>link=</option><option>link=Dossiers partagés avec moi</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>xpath=(.//*[normalize-space(text()) and normalize-space(.)='N/A'])[1]/following::input[2]<datalist><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='N/A'])[1]/following::input[2]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='doc1'])[1]/following::input[2]</option><option>//input[@value='Consulter']</option><option>//form[@id='form_show']/input[2]</option><option>//input[2]</option><option>css=input.btn.btn-xs.btn-default</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Consulter un dossier'])[1]/following::p[1]<datalist><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Consulter un dossier'])[1]/following::p[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Mes modifications en attente'])[1]/following::p[1]</option><option>//div[2]/div/div[2]/p</option><option>css=div.well &gt; p</option></datalist></td><td>Nom Prénom : pat3 pat3</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">add_comment_to_shared_file</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://webmedical/<datalist><option>http://webmedical/</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>link=Dossiers partagés avec moi<datalist><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Déconnexion'])[1]/following::b[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Gérer les notifications'])[1]/following::b[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Mes modifications en attente'])[1]/preceding::b[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)=concat('Bienvenue sur la base de données locale de l', "'", 'établissement.')])[1]/preceding::b[2]</option><option>//b</option><option>css=b</option><option>link=Dossiers partagés avec moi</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>xpath=(.//*[normalize-space(text()) and normalize-space(.)='N/A'])[1]/following::input[4]<datalist><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='N/A'])[1]/following::input[4]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='doc1'])[1]/following::input[4]</option><option>//input[@value='Ajouter']</option><option>xpath=(//form[@id='form_show']/input[2])[2]</option><option>//td[2]/form/input[2]</option><option>css=input.btn.btn-xs.btn-primary</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>link=Ajouter un commentaire<datalist><option>link=Ajouter un commentaire</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Commentaires'])[1]/following::a[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Non'])[2]/following::a[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Images'])[1]/preceding::a[1]</option><option>//a[@onclick="addComment('Ergotherapie')"]</option><option>//form[@id='form_edit']/div[4]/div/a</option><option>//div[4]/div/a</option><option>css=a.handsOn</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=appbundle_member_data<datalist><option>id=appbundle_member_data</option><option>name=appbundle_member[datacomment0]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Commentaires'])[1]/following::textarea[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Commentaire public :'])[1]/preceding::textarea[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Oui'])[3]/preceding::textarea[1]</option><option>//textarea[@id='appbundle_member_data']</option><option>//form[@id='form_edit']/div[5]/div/textarea</option><option>//textarea</option><option>css=#appbundle_member_data</option></datalist></td><td>Katalon test comment</td>
+</tr>
+<tr><td>click</td><td>id=appbundle_member_Valider<datalist><option>id=appbundle_member_Valider</option><option>name=appbundle_member[Valider]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Fichiers'])[1]/following::button[1]</option><option>//button[@id='appbundle_member_Valider']</option><option>//form[@id='form_edit']/div[9]/div[2]/button</option><option>//div[2]/button</option><option>css=#appbundle_member_Valider</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Consulter un dossier'])[1]/following::div[1]<datalist><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Consulter un dossier'])[1]/following::div[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Mes modifications en attente'])[1]/following::div[1]</option><option>//div[2]/div/div[2]</option><option>css=div.alert.alert-success</option></datalist></td><td>La demande de modification a été soumise avec succès !</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">send_bug_report</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://webmedical/<datalist><option>http://webmedical/sharedwithme</option><option>http://webmedical/</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>link=par1<datalist><option>link=par1</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Notifications'])[1]/following::a[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='(c) christian.toinard@insa-cvl.fr'])[1]/following::a[2]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='par1'])[2]/preceding::a[1]</option><option>//a[contains(@href, '#')]</option><option>//li[2]/a</option><option>css=li.dropdown &gt; a.dropdown-toggle</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>link=Reporter un bogue<datalist><option>link=Reporter un bogue</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='admin'])[2]/following::a[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='admin'])[1]/following::a[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Déconnexion'])[1]/preceding::a[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Ajouter un utilisateur'])[1]/preceding::a[2]</option><option>//a[contains(text(),'Reporter un bogue')]</option><option>//a[contains(@href, 'mailto:christian.toinard@insa-cvl.fr?subject=Application locale - MesureLocal&amp;body=Bonjour')]</option><option>//p[2]/a</option><option>css=a.btn.btn-default.btn-block.btn-sm</option></datalist></td><td>Reporter un bogue</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">changer_mot_de_passe</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://webmedical/<datalist><option>http://webmedical/</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>link=par1<datalist><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='par1'])[1]/following::span[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Notifications'])[1]/following::span[2]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='par1'])[2]/preceding::span[2]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Reporter un bogue'])[1]/preceding::span[2]</option><option>//span[2]</option><option>css=span.glyphicon.glyphicon-chevron-down</option><option>link=par1</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>link=Changer le mot de passe<datalist><option>link=Changer le mot de passe</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Reporter un bogue'])[1]/following::a[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='par1'])[2]/following::a[2]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Gérer les notifications'])[1]/preceding::a[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Déconnexion'])[1]/preceding::a[2]</option><option>//a[contains(text(),'Changer le mot de passe')]</option><option>//a[contains(@href, '/changepassword')]</option><option>//a[2]</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=appbundle_user_plainPassword_first<datalist><option>id=appbundle_user_plainPassword_first</option><option>name=appbundle_user[plainPassword][first]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Mot de passe'])[1]/following::input[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Modifier votre mot de passe'])[1]/following::input[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Répéter mot de passe'])[1]/preceding::input[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Enregistrer'])[1]/preceding::input[2]</option><option>//input[@id='appbundle_user_plainPassword_first']</option><option>//div[@id='appbundle_user']/div/div/input</option><option>//input</option><option>css=#appbundle_user_plainPassword_first</option></datalist></td><td>bbbbbb</td>
+</tr>
+<tr><td>type</td><td>id=appbundle_user_plainPassword_second<datalist><option>id=appbundle_user_plainPassword_second</option><option>name=appbundle_user[plainPassword][second]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Répéter mot de passe'])[1]/following::input[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Mot de passe'])[1]/following::input[2]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Enregistrer'])[1]/preceding::input[1]</option><option>//input[@id='appbundle_user_plainPassword_second']</option><option>//div[@id='appbundle_user']/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#appbundle_user_plainPassword_second</option></datalist></td><td>bbbbbb</td>
+</tr>
+<tr><td>click</td><td>id=appbundle_user_Enregistrer<datalist><option>id=appbundle_user_Enregistrer</option><option>name=appbundle_user[Enregistrer]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Répéter mot de passe'])[1]/following::button[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Mot de passe'])[1]/following::button[1]</option><option>//button[@id='appbundle_user_Enregistrer']</option><option>//div[@id='appbundle_user']/div[3]/div[2]/button</option><option>//button</option><option>css=#appbundle_user_Enregistrer</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Modifier votre mot de passe'])[1]/following::div[1]<datalist><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Modifier votre mot de passe'])[1]/following::div[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Mes modifications en attente'])[1]/following::div[1]</option><option>//div[2]/div/div</option><option>css=div.alert.alert-success</option></datalist></td><td>Le mot de passe a été modifié avec succès !</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">voir_notification</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://webmedical/<datalist><option>http://webmedical/</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>link=Notifications<datalist><option>link=Notifications</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='(c) christian.toinard@insa-cvl.fr'])[1]/following::a[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='par1'])[1]/preceding::a[1]</option><option>//a[contains(@href, '/notifications')]</option><option>//li/a</option><option>css=a.dropdown-toggle</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Notifications :'])[1]/following::p[1]<datalist><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Notifications :'])[1]/following::p[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Mes modifications en attente'])[1]/following::p[1]</option><option>//div[2]/div/div[2]/p</option><option>css=div.row &gt; p</option></datalist></td><td>Dr. doc1 a annulé le partage du dossier du patient pat1 pat1 avec vous.</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">logout</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://webmedical/<datalist><option>http://webmedical/</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>link=par1<datalist><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Notifications'])[1]/following::strong[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='(c) christian.toinard@insa-cvl.fr'])[1]/following::strong[2]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='par1'])[2]/preceding::strong[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Reporter un bogue'])[1]/preceding::strong[2]</option><option>//li[2]/a/strong</option><option>css=li.dropdown &gt; a.dropdown-toggle &gt; strong</option><option>link=par1</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>link=Déconnexion<datalist><option>link=Déconnexion</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Gérer les notifications'])[1]/following::a[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Changer le mot de passe'])[1]/following::a[2]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Dossiers partagés avec moi'])[1]/preceding::a[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Mes modifications en attente'])[1]/preceding::a[2]</option><option>//a[contains(text(),'Déconnexion')]</option><option>//a[contains(@href, '/logout')]</option><option>//a[4]</option><option>css=a.btn.btn-danger.btn-block.btn-sm</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Username'])[1]/preceding::h2[1]<datalist><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Username'])[1]/preceding::h2[1]</option><option>xpath=(.//*[normalize-space(text()) and normalize-space(.)='Password'])[1]/preceding::h2[1]</option><option>//h2</option><option>css=h2</option></datalist></td><td>MesureLocal (c) Pour toute utilisation, copie ou modification de ce programme vous devez obtenir préalablement l'autorisation auprès de christian.toinard@insa-cvl.fr</td>
+</tr>
+</tbody></table>
+</body>
+</html>

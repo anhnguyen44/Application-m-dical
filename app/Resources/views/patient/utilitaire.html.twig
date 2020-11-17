@@ -1,0 +1,551 @@
+
+
+{# Création d'onglet
+    label : nom de l'onglet
+    section : Section sur laquelle l'onglet agit
+    text : texte affiché sur l'onglet
+    function : fonction appelée lorsqu'on clique sur l'onglet
+#}
+{% macro tab(label, section, text, function) %}
+
+    <div class="form-group">
+
+        <label class="control-label required"> {{label}} </label>
+
+        <div class="{{section}}">
+            <a class="handsOn" onclick={{function}}>
+                <i class="glyphicon glyphicon-plus"></i>
+                {{text}}
+            </a>
+        </div>
+    </div>
+
+
+{% endmacro %}
+
+
+{% macro choose_pro(listPro) %}
+
+    {% if listPro != null %}
+        
+        <div class="form-group">
+            <label class="col-sm-2 control-label required" for="appbundle_member_proId">Médecin soignant*</label>
+            <div class="col-sm-10">
+                <select
+                        id="appbundle_member[proId]"
+                        name="appbundle_member[proId]"
+                        class="form-control">
+
+                    {% for pro in listPro| sortbyfield('username') %}
+                        <option value='{{ pro.getId }}'> {{ pro.getUsername }} </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        
+    {% endif %}
+{% endmacro %}
+
+
+{# Affiche les informations du patient
+    patient : le patient dont les données sont affichées
+#}
+{% macro data(patient, edit, form) %}
+
+    {% if edit %}
+                    
+        {{ form_row(form.nom) }}
+        {{ form_row(form.prenom) }}
+        {{ form_row(form.sexe) }}
+        {{ form_row(form.dateNaissance) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.adresse) }}
+        {{ form_row(form.tel) }}
+        {{ form_row(form.socialNumber) }}
+        {{ form_row(form.medecinTraitant) }}
+        {{ form_row(form.Public) }}
+        {{ form_row(form.partage) }}
+                    
+    {% else %}
+
+        {% if form != null %}
+
+            {{ form_widget(form.nom, { 'attr' : {'class': 'hidden'} }) }}
+            {{ form_widget(form.prenom, { 'attr' : {'class': 'hidden'} }) }}
+            {{ form_widget(form.sexe, { 'attr' : {'class': 'hidden'} }) }}
+            {{ form_widget(form.dateNaissance,{ 'attr': {'class':'hidden'}}) }}
+            {{ form_widget(form.email, { 'attr' : {'class': 'hidden'} }) }}
+            {{ form_widget(form.adresse, { 'attr' : {'class': 'hidden'} }) }}
+            {{ form_widget(form.tel, { 'attr' : {'class': 'hidden'} }) }}
+            {{ form_widget(form.socialNumber, { 'attr' : {'class': 'hidden'} }) }}
+            {{ form_widget(form.medecinTraitant, { 'attr' : {'class': 'hidden'} }) }}
+            {{ form_widget(form.Public, { 'attr' : {'class': 'hidden'} }) }}
+            {{ form_widget(form.partage, { 'attr' : {'class': 'hidden'} }) }}
+        
+        {% endif %}
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col-sm-3"><b>Prénom Nom</b></div>
+                <div class="col-sm-9 _test_nom">{{ patient.getPrenom }} {{ patient.getNom }}</div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3"><b>Adresse mail</b></div>
+                <div class="col-sm-9 _test_email">{{ patient.email }}</div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3"><b>Sexe</b></div>
+                <div class="col-sm-9 _test_sexe">{{ patient.getSexe }}</div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3"><b>Date de naissance</b></div>
+                <div class="col-sm-9 _test_date">{{ patient.getDateNaissance | date('d/m/Y') }}</div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3"><b>Adresse</b></div>
+                <div class="col-sm-9 _test_adresse">{{ patient.getAdresse }}</div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3"><b>Numéro de téléphone</b></div>
+                <div class="col-sm-9 _test_tel">0{{ patient.getTel }}</div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3"><b>N. Sécurité sociale</b></div>
+                <div class="col-sm-9 _test_secu">{{ patient.getSocialNumber }}</div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3"><b>Medecin traitant</b></div>
+                <div class="col-sm-9 _test_med">{{ patient.getMedecinTraitant }}</div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3"><b>Participation à des études statistiques</b></div>
+                <div class="col-sm-9 _test_etudes">{{ patient.isPublic ? 'Oui' : 'Non' }}</div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3"><b>Dossier visible par tous</b></div>
+                <div class="col-sm-9 _test_visible">{{ patient.getPartage ? 'Oui' : 'Non' }}</div>
+            </div>
+
+        </div>
+
+        <hr/>
+    
+    {% endif %}
+
+{% endmacro %}
+
+
+{# Récupère/envoie un patient en fonction de son id
+    listPatient : liste de tout les patients
+    method : methode utilisée (get ou post)
+    function : fonction appelée lors de la validation
+    onClick : fonction appelée lorsque l'on clique sur le bouton submit
+#}
+{% macro search_patient(listPatient, method, function, onClick) %}
+
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Rechercher un patient" class="form-control">
+    <ul id="patient_list" class="list-group">
+
+        {% for lPatient in listPatient | sortbyfield('nom') %}
+            <li class="list-group-item center"><a testvalue='{{ lPatient.getPatientId }}' href='?patientId={{ lPatient.getPatientId }}'>{{ lPatient.getNom }} {{ lPatient.getPrenom }}</a></li>
+        {% endfor %}
+
+    </ul>
+
+    <script>
+
+        function myFunction() {
+                var input, filter, ul, li, a, i, txtValue;
+                input = document.getElementById('myInput');
+                filter = input.value.toUpperCase();
+                li = document.getElementById("patient_list").getElementsByTagName('li');
+
+                for (i = 0; i < li.length; i++) {
+                    a = li[i].getElementsByTagName("a")[0];
+                    txtValue = a.textContent || a.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        li[i].style.display = "";
+                    } else {
+                        li[i].style.display = "none";
+                    }
+                }
+        }
+    </script>
+    
+{% endmacro %}
+
+
+
+
+
+{% macro modal() %}
+
+    <div class="modal" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" type="button" data-dismiss="modal">×</button>
+                    <h3 class="modal-title"></h3>
+                </div>
+                <div class="modal-body">
+                    <div id="modalCarousel" class="carousel">
+                        <div class="carousel-inner"></div>
+                        <a class="carousel-control left" href="#modaCarousel" data-slide="prev">
+                            <i class="glyphicon glyphicon-chevron-left"></i>
+                        </a>
+                        <a class="carousel-control right" href="#modalCarousel" data-slide="next">
+                            <i class="glyphicon glyphicon-chevron-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+{% endmacro %}
+
+{# Affiche les différents types de validations possible
+    type : type de données
+    key : la clé de la donnée à valider
+#}
+
+{% macro validation(type, key) %}
+    <div class="col-lg-3 col-sm-3 col-xs-6">
+        <input type="radio" name="appbundle_member[data {{type}} validation {{ key }}]"
+               value="1"> Valider et partager
+        <br>
+        <input type="radio" name="appbundle_member[data {{type}} validation {{ key }}]"
+               value="4"> Valider sans partager
+        <br>
+        <input type="radio" name="appbundle_member[data {{type}} validation {{ key }}]"
+               value="3"> Archiver
+        <br>
+        <input type="radio" name="appbundle_member[data {{type}} validation {{ key }}]"
+               checked="checked" value="2"> Mettre en attente
+        <br>
+        <input type="radio" name="appbundle_member[data {{type}} validation {{ key }}]"
+               value="5"> Supprimer
+    </div>
+{% endmacro %}
+
+
+{% macro content(user, patient, evaluators, edit) %}
+
+    {% set categories = [
+        "Appareillage",
+        "Bilans médicaux",
+        "Certificats","Consultations",
+        "Courriers",
+        "Divers",
+        "Médecin",
+        "Ergotherapie",
+        "Infirmerie",
+        "Kinésithérapie",
+        "Musicothérapie",
+        "Neuropsychologue",
+        "Orthophonie",
+        "Psychologue",
+        "Psychomotricité",
+        "Radios"
+        ]
+    %}
+
+    {% set comments = patient.getData["comments"]|reverse %}
+    {% set images = patient.getData["images"]|reverse %}
+    {% set videos = patient.getData["videos"]|reverse %}
+    {% set files = patient.getData["files"]|reverse %}
+
+    {% set evalComments = evaluators["comments"] %}
+    {% set evalImages = evaluators["images"] %}
+    {% set evalVideos = evaluators["videos"] %}
+    {% set evalFiles = evaluators["files"] %}
+
+
+    {% set nbrComments, nbrImages, nbrVideos, nbrFiles = 0, 0, 0, 0 %}
+    {% set idx = -1 %}
+    {% set nbrInCat = [] %}
+    {% for keyCat, cat in categories %}
+        
+        {% set idx = idx + 1 %}
+        {% set nbrElts = 0 %}
+        <div class="panel-group">
+        <div class="panel panel-default">
+            
+            <div class="panel-heading">
+            <h4 class="panel-title">
+            <a class="_test_link_toggle_{{ cat }}" data-toggle="collapse" href="#collapse{{ cat|split(' ')|join('_') }}">
+            <h3 class="bg-primary">{{ cat }} <span style="font-size: 15px;" class="nbrInCat{{ idx }}"></span></h3>
+            </a>
+            </h4>
+            </div>
+            
+            <div id="collapse{{ cat|split(' ')|join('_') }}" class="panel-collapse collapse">
+            <ul class="list-group col-sm-offset-1">
+            <h5 class="bg-info">
+
+                <li class="list-group-item"><h4>Commentaires</h4></li>
+                {% for key,value in comments %}
+                    
+                    {% if (
+                        (value['categorie'] == keyCat)
+                        and ((value['validation'] == 1 and value['perm'] == 0)
+                        or (value['perm'] == 1 and value['pro_id'] == user.getId and value['validation'] == 1)
+                        or (value['validation'] == 4 and value['perm'] == 0 and (value['pro_id'] == user.getId or user == patient.getOwner))
+                        or (value['perm'] == 1 and user == patient.getOwner)
+                        or (value['perm'] == 1 and user.getRoles[0] == "ROLE_SECRETARY"))                
+                    ) %}
+                            
+                        {% set nbrElts = nbrElts + 1 %}
+                        <div class="col-sm-offset-1">
+
+                            <textarea id="appbundle_member_data" disabled="disabled"
+                                name="appbundle_member[datacomment{{ key }}]"
+                                class="form-control">{{ value['comm'] }}</textarea>
+
+                            <label class="pull-right">Par {{ evalComments[value['pro_id']] }} &bull; Rédigé le {{ value['created_at'] }} </label>
+
+                            {% if edit %}
+                                <div class="col-lg-3 col-sm-3 col-xs-6">
+                                    Archiver ce commentaire
+                                    <input type="checkbox" name="appbundle_member[data comments archive {{ key }}]">
+                                </div>
+                            
+
+                                {% if value['perm'] == 1 %}
+                                    <div class="col-lg-3 col-sm-3 col-xs-6">
+                                        Passer à public :
+                                        <input type="checkbox" name="appbundle_member[data comments perm {{ key }}]">
+                                    </div>
+                                {% else %}
+                                    <div class="col-lg-3 col-sm-3 col-xs-6">
+                                        Passer à privé :
+                                        <input type="checkbox" name="appbundle_member[data comments perm {{ key }}]">
+                                    </div>
+                                {% endif %}
+
+                            {% endif %}
+
+                            <br/>
+                            <br/>
+                            <br/>
+
+                        </div>
+                        
+
+                    {% endif %}
+                {% endfor %}
+
+                <li class="list-group-item"><h4>Images</h4></li>
+                {% if images != null %}                            
+                    {% for key,image in images %}
+                        <div class="form-group">
+                        <div class="container-fluid">
+                        <div class="row imageSection flexrow">
+                            {% for idEvalImages, nameEvalImages in evalImages %}
+                                {% if (
+                                    (image['categorie'] == keyCat)
+                                    and ((image['validation'] == 1 and image['perm'] == 0)
+                                    or (image['perm'] == 1 and image['pro_id'] == user.getId and image['validation'] == 1)
+                                    or (image['validation'] == 4 and image['perm'] == 0 and (image['pro_id'] == user.getId or user == patient.getOwner))
+                                    or (image['perm'] == 1 and user == patient.getOwner)
+                                    or (image['perm'] == 1 and user.getRoles[0] == "ROLE_SECRETARY"))
+                                    and (image['pro_id'] == idEvalImages)
+                                ) %}
+                                        
+                                    {% set nbrElts = nbrElts + 1 %}
+                                    <div class="col-sm-offset-1 col-lg-3 col-sm-4 col-xs-6" name="appbundle_member[dataimage{{ key }}]">
+
+                                        <a href="#">
+                                            <img class="thumbnail img-responsive test" src="download/image?filePath={{image['path']}}&fileName={{image['name']}}" />
+                                        </a>
+
+                                        <div class="pull-right">
+                                            <label >Par {{ evalImages[image['pro_id']] }} &bull; le {{ image['created_at'] }} </label>
+                                            
+                                            {% if edit %}
+                                                <div>
+                                                    Archiver cette photo
+                                                    <input type="checkbox" name="appbundle_member[data images archive {{ key }}]" value="3">
+                                                </div>
+                                            
+
+                                                {% if image['perm'] == 1 %}
+                                                    <div>
+                                                        Passer à publique :
+                                                        <input type="checkbox" name="appbundle_member[data images perm {{ key }}]">
+                                                    </div>
+                                                {% else %}
+                                                    <div>
+                                                        Passer à privé :
+                                                        <input type="checkbox" name="appbundle_member[data images perm {{ key }}]">
+                                                    </div>
+                                                {% endif %}
+
+                                            {% endif %}
+                                        
+                                            <br/>
+                                            <br/>
+                                            <br/>
+
+                                        </div>
+                                    </div>
+
+                                {% endif %}
+                            {% endfor %}
+                        
+                        </div>
+                        </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+
+                <li class="list-group-item"><h4>Videos</h4></li>
+                {% if videos != null %}
+                    {% for key,video in videos %}                
+                        <div class="form-group">
+                        <div class="container-fluid">
+                        <div class="row videoSection flexrow">
+                            {% for idEvalVideos, nameEvalVideos in evalVideos %}
+                                
+                                {% if (
+                                    (video['categorie'] == keyCat)
+                                    and ((video['validation'] == 1 and video['perm'] == 0)
+                                    or (video['perm'] == 1 and video['pro_id'] == user.getId and video['validation'] == 1)
+                                    or (video['validation'] == 4 and video['perm'] == 0 and (video['pro_id'] == user.getId or user == patient.getOwner)))
+                                    and (video['pro_id'] == idEvalVideos)
+                                ) %}
+                                    
+                                    {% set nbrElts = nbrElts + 1 %}
+                                    <div class="col-md-offset-1 ">
+                                        
+                                        <div class="thumbVideo  embed-responsive-16by9">
+                                                <video controls style="max-width: 100%">
+                                                    <source src="download/video?filePath={{video['path']}}&fileName={{video['name']}}" type="video/mp4" />
+                                                    Votre navigateur ne supporte pas les vidéos HTML5.
+                                                </video>
+                                        </div>
+
+                                        <div class="pull-right">
+                                            <label>Par {{ evalVideos[video['pro_id']] }} &bull; le {{ video['created_at'] }} </label>
+                                            
+                                            {% if edit %}
+                                                <div>
+                                                    Archiver cette vidéo
+                                                    <input type="checkbox" name="appbundle_member[data videos archive {{ key }}]"
+                                                            value="3">
+                                                </div>
+                                        
+
+                                                {% if video['perm'] == 1 %}
+                                                    <div>
+                                                        Passer à publique :
+                                                        <input type="checkbox" name="appbundle_member[data videos perm {{ key }}]">
+                                                    </div>
+                                                {% else %}
+                                                    <div>
+                                                        Passer à privé :
+                                                        <input type="checkbox" name="appbundle_member[data videos perm {{ key }}]">
+                                                    </div>
+                                                {% endif %}
+                                            
+                                            {% endif %}
+                                            <br/>
+                                            <br/>
+                                            <br/>
+                                        </div>
+
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        
+                        </div>
+                        </div>   
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <li class="list-group-item"><h4>Documents</h4></li>
+                    {% if files != null %}
+                        {% for key,file in files %}               
+                            <div class="form-group">
+                            <div class="container-fluid">
+                            <div class="row fileSection flexrow">
+                                {% for idEvalFiles, nameEvalFiles in evalFiles %}
+
+                                    {% if (
+                                        (file['categorie'] == keyCat)
+                                        and ((file['validation'] == 1 and file['perm'] == 0)
+                                        or (file['perm'] == 1 and file['pro_id'] == user.getId and file['validation'] == 1)
+                                        or (file['validation'] == 4 and file['perm'] == 0 and (file['pro_id'] == user.getId or user == patient.getOwner))
+                                        or (file['perm'] == 1 and user == patient.getOwner)
+                                        or (file['perm'] == 1 and user.getRoles[0] == "ROLE_SECRETARY"))
+                                        and (file['pro_id'] == idEvalFiles)
+                                    ) %}
+                                                
+                                        {% set nbrElts = nbrElts + 1 %}
+                                        <div class="well col-md-offset-1 col-md-8" >
+                                            
+                                            <li class=" list-unstyled">
+                                                <!-- Requête GET sur la route editpatient pour déchiffrer et télécharger les fichiers -->
+                                                <a href='download/file?&filePath={{ file['path'] }}&fileName={{ file['name'] }}'>{{ file['name'] }}</a>
+                                                <label class="pull-right">Par {{ evalFiles[file['pro_id']] }} &bull; le {{ file['created_at'] }} </label>
+                                            </li>
+
+                                            <span class="col-md-offset-1">
+                                                
+                                                {% if edit %}
+                                                    
+                                                    Archiver ce fichier
+                                                    <input type="checkbox" name="appbundle_member[data files archive {{ key }}]"
+                                                            value="3">
+
+                                                    {% if file['perm'] == 1 %}
+                                                    
+                                                        Passer à public :
+                                                        <input type="checkbox" name="appbundle_member[data files perm {{ key }}]">
+                                                    
+                                                    {% else %}
+
+                                                        Passer à privé :
+                                                        <input type="checkbox" name="appbundle_member[data files perm {{ key }}]">
+                                                    
+                                                    {% endif %}
+        
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+            
+            </h5>
+            </ul>
+            </div>
+            </div>
+        
+        </div>
+        
+        {% set nbrInCat = nbrInCat|merge({(idx): (nbrElts)}) %}
+        <input type="hidden" name="nbrInCat{{ idx }}" value="{{ nbrInCat[idx] }}">
+
+    {% endfor %}
+{% endmacro %}

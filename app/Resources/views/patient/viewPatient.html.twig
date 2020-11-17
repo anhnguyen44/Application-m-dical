@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+{% import 'patient/utilitaire.html.twig' as util %}
+{% import 'patient/buttons.twig' as button %}
+
+{% block title %}Consulter mes dossiers{% endblock %}
+{% block headline %}Consulter un dossier{% endblock %}
+{% block body %}
+
+
+
+    {% if patient == null %}
+
+        {% if not is_granted('ROLE_PARAMEDICAL') %}
+
+            <p class="medium">Sélectionnez le dossier à consulter :</p>
+            {{ util.search_patient(listPatient, "POST", "Consulter", null) }}
+
+        {% else %}
+
+            <script> window.location.href = "{{ path('sharedwithme') }}" </script>
+        
+        {% endif %}
+    
+    
+    {% else %}
+        	            
+        <div class="row">
+
+            <div class="col-sm-8">
+                <div class="well">
+                    {{ util.data(patient, false, null) }}
+                    {{ util.content(user, patient, evaluators, false) }}
+                    {{ util.modal() }}
+
+                </div>
+            </div>
+
+
+            <div class="col-sm-4" >
+                <div class="well affix" style="overflow-y: scroll; max-height: 500px; top: 90px;">
+
+                    <div class="row">
+                        <div class="col-sm-12" align="center">	
+                            <div class="btn-group">
+                        
+                                <style>
+                                    .btn {
+                                        -webkit-border-radius: 0;
+                                        -moz-border-radius: 0;
+                                        border-radius: 0;
+                                    }
+                                </style>
+
+                                {% if (is_granted('ROLE_MEDICAL') and patient.getOwner == user) or is_granted('ROLE_SECRETARY') %}
+
+                                    {{ button.edit_patient(patient) }}
+                                    {{ button.healthcare_patient(patient) }}
+                                    {{ button.archive_patient(patient) }}
+                                    {{ button.delete_patient(patient) }}
+                                
+                                {% else %}
+
+                                    {{ button.healthcare_patient(patient) }}
+
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    </div>
+                        
+                    <div class="row">
+                        <div class="col-sm-12">	
+                            {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}} ) }}
+                                {% set speciality = user.getSpeciality.getSpeciality %}
+                                {{ util.tab("Commentaires", "newComment", "Ajouter un commentaire", "addComment('#{speciality}')") }}
+                                {{ util.tab("Images", "newImage", "Ajouter une photo", "addImage('#{speciality}')") }}
+                                {{ util.tab("Vidéos", "newVideo", "Ajouter une vidéo", "addVideo('#{speciality}')") }}
+                                {{ util.tab("Fichiers", "newFile", "Ajouter un fichier", "addFile('#{speciality}')") }}
+                                <div align="center">
+                                {{ button.validate_edit_patient() }}
+                                </div>
+                            {{ form_end(form) }}
+                            
+                        </div>
+                    </div>
+
+                    
+
+                </div>
+            </div>
+
+        </div>
+                
+    {% endif %}
+
+{% endblock %}

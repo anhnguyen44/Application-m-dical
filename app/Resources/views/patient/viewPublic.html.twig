@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% import 'patient/utilitaire.html.twig' as util %}
+
+{% block title %}Consulter un dossier{% endblock %}
+{% block headline %}Consulter les dossiers publics{% endblock %}
+{% block body %}
+    
+    {% if patient == null %}
+  
+        <p class="medium">Sélectionnez le dossier à consulter :</p>
+        {{ util.search_patient(listPatient, "POST", "Consulter", null)}}
+
+    {% else %}
+
+        <div class="well">
+            {{ util.data(patient, false, null) }}
+            {{ util.content(user, patient, evaluators, false) }}
+            {{ util.modal() }}
+        </div>
+        
+    {% endif %}
+    
+{% endblock %}

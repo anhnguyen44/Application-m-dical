@@ -1,0 +1,117 @@
+# To get started with security, check out the documentation:
+# https://symfony.com/doc/current/security.html
+security:
+
+    access_denied_url: /
+
+    role_hierarchy:
+      ROLE_ADMIN:
+      ROLE_SECRETARY: [ROLE_USER]
+      ROLE_MEDICAL: [ROLE_USER]
+      ROLE_PARAMEDICAL: [ROLE_USER]
+
+    encoders:
+      Symfony\Component\Security\Core\User\User:
+        algorithm: bcrypt
+      AppBundle\Entity\User:
+        algorithm: bcrypt
+
+
+    # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    providers:
+        chain_provider:
+          chain:
+            providers: [ in_memory, db_provider ]
+        in_memory:
+            memory:
+              users:
+                admin:
+                  password: $2y$13$UEXcn0ojaqwrA3mqo65B8OuJPouRUABzpEDvsqKveBYDNSX7BfLcO
+                  #password: $2y$13$YXCx086tkoA9hPKySvVph.XJCN9vb2OreWyhl5jLQzQi.fCSv0hjS
+                  #password: $2y$13$.B0lI8t.TVBe7GRjFHkML.LUpOxx/NAk1thCOzPN6LLyaESuh4oK2
+                  #password: $2a$06$.aX9MkoSG5OdMPrjThsRvuWDcwCdPAjhz1Lhki.sWA5gE7V3Za8.m
+
+                  roles: 'ROLE_ADMIN'
+        db_provider:
+          entity:
+            class: AppBundle:User
+            property: username
+
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            pattern: ^/
+            provider: chain_provider
+            form_login:
+              login_path: login
+              check_path: login
+            logout: true
+
+            anonymous: ~
+            # activate different ways to authenticate
+
+            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+            #http_basic: ~
+
+            # https://symfony.com/doc/current/security/form_login_setup.html
+            #form_login: ~
+
+    access_control:
+      # TODO : add https
+      # requires_channel: https
+
+      - { path: ^/(login)$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+      - { path: ^/viewpublic, role: ROLE_MEDICAL }
+      - { path: ^/archiveddata, role: ROLE_MEDICAL }
+      - { path: ^/validatepatient, roles: [ROLE_MEDICAL, ROLE_PARAMEDICAL] }
+
+      - { path: ^/addpatient, roles: [ROLE_MEDICAL, ROLE_SECRETARY] }
+      - { path: ^/deletepatient, roles: [ROLE_MEDICAL, ROLE_SECRETARY] }
+      - { path: ^/editpatient, roles: [ROLE_MEDICAL, ROLE_SECRETARY] }
+      - { path: ^/viewpatient, roles: [ROLE_MEDICAL, ROLE_SECRETARY, ROLE_PARAMEDICAL] }
+
+      - { path: ^/archivedpatient, roles: [ROLE_MEDICAL,ROLE_SECRETARY] }
+      - { path: ^/archivepatient, roles: [ROLE_MEDICAL,ROLE_SECRETARY] }
+      - { path: ^/unarchivepatient, roles: [ROLE_MEDICAL,ROLE_SECRETARY] }
+
+      - { path: ^/importExistent, role: ROLE_SECRETARY }
+      - { path: ^/changedoc, role: ROLE_SECRETARY }
+
+      - { path: ^/sharepatient, role: ROLE_MEDICAL }
+      - { path: ^/sharedpatient, role: ROLE_MEDICAL }
+      - { path: ^/cancelsharing, role: ROLE_MEDICAL }
+      - { path: ^/sharedwithme, roles: [ROLE_MEDICAL, ROLE_PARAMEDICAL] }
+
+      - { path: ^/confignotifications, roles: [ROLE_MEDICAL, ROLE_SECRETARY, ROLE_PARAMEDICAL] }
+      - { path: ^/notifications, roles: [ROLE_MEDICAL, ROLE_SECRETARY, ROLE_PARAMEDICAL] }
+      - { path: ^/changepassword, roles: [ROLE_MEDICAL, ROLE_SECRETARY, ROLE_PARAMEDICAL] }
+
+      - { path: ^/register, roles: ROLE_ADMIN }
+      - { path: ^/viewusers, roles: ROLE_ADMIN }
+      - { path: ^/edituser, role: ROLE_ADMIN }
+      - { path: ^/deleteuser, role: ROLE_ADMIN }
+      - { path: ^/createBackup, roles: [ROLE_ADMIN, ROLE_SECRETARY] }
+      - { path: ^/listBackup, roles: [ROLE_ADMIN, ROLE_SECRETARY] }
+      - { path: ^/configBackup, roles: [ROLE_ADMIN, ROLE_SECRETARY] }
+      - { path: ^/restoreBackup, roles: [ROLE_ADMIN, ROLE_SECRETARY] }      
+      - { path: ^/downloadBackup, roles: [ROLE_ADMIN, ROLE_SECRETARY] }
+      - { path: ^/uploadBackup, roles: [ROLE_ADMIN, ROLE_SECRETARY] }
+      - { path: ^/viewStatus, roles: [ROLE_ADMIN, ROLE_SECRETARY] }
+      - { path: ^/deleteBackup, roles: [ROLE_ADMIN, ROLE_SECRETARY] }
+      - { path: ^/managespeciality, roles: ROLE_ADMIN }
+      - { path: ^/viewspeciality, roles: [ROLE_ADMIN, ROLE_SECRETARY] }
+
+      - { path: ^/encryptAllFiles, roles: [ROLE_ADMIN] }
+      
+      - { path: ^/\d+/healthcare/$, roles: [ROLE_SECRETARY, ROLE_MEDICAL, ROLE_PARAMEDICAL]}
+      - { path: ^/\d+/healthcare/add$, roles: [ROLE_SECRETARY, ROLE_MEDICAL]}
+      - { path: ^/\d+/healthcare/\d+/close$, roles: [ROLE_SECRETARY]}
+      - { path: ^/\d+/healthcare/\d+/addsession$, roles: [ROLE_MEDICAL, ROLE_PARAMEDICAL]}
+      
+      - { path: ^/, role: ROLE_USER }
+      - { path: ^/, role: ROLE_ADMIN }

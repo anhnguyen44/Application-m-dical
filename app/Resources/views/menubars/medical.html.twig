@@ -1,0 +1,33 @@
+
+<ul class="nav nav-pills">
+    <li><a href="{{ path('addpatient') }}"><b>Ajouter un dossier</b></a></li>
+    {# Create Dropdown for "Mes Dossier" #}
+    <li class="dropdown">
+        <a class="dropdown" data-toggle="dropdown" ><b>Mes dossiers
+                <span class="caret"></span></b></a>
+        <ul class="dropdown-menu">
+            <li><a href="{{ path('viewpatient') }}">Consulter un dossier</a></li>
+            <li><a href="{{ path('validatepatient') }}">Valider un dossier</a></li>
+        </ul>
+    </li>
+    {# Finish create Dropdown #}
+    <li class="dropdown">
+        <a class="dropdown" data-toggle="dropdown"><b>Les archives</b>
+            <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li><a href="{{ path('archivedpatient') }}">Consulter un dossier archivé</a></li>
+            <li><a href="{{ path('archiveddata') }}">Consulter des données archivées</a></li>
+        </ul>
+    </li>
+    <li><a href="{{ path('sharepatient') }}"><b>Partager un dossier</b></a></li>
+    <li class="dropdown">
+        <a class="dropdown" data-toggle="dropdown"><b>Dossiers partagés</b>
+            <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li><a href="{{ path('view_public_patient') }}">Les dossiers publics</a></li>
+            <li><a href="{{ path('sharedpatient') }}">Mes dossiers partagés</a></li>
+            <li><a href="{{ path('sharedwithme') }}">Partagés avec moi</a></li>
+        </ul>
+    </li>
+
+</ul>

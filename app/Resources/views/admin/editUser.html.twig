@@ -1,0 +1,33 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le mot de passe d'un compte{% endblock %}
+{% block headline %}Modifier le mot de passe d'un compte{% endblock %}
+{% block body %}
+
+    {% if not form %}
+        <p class="medium"> Sélectionner le compte à modifier :</p>
+
+        <form id="form_show" name="form_show" method="GET">
+
+            <select title="id" id="patientId" name="id" class="form-control">
+
+                {% for user in users | sortbyfield('username') %}
+                    <option id='id' value='{{ user.getId }}'>{{ user.getSpeciality.getSpeciality  }} - {{ user.getUsername }} </option>
+                {% endfor %}
+
+            </select>
+
+            <br>
+
+            <input type='submit' value='Modifier' class="btn btn-default">
+
+        </form>
+
+    {% else %}
+
+        {{ form(form) }}
+
+    {% endif %}
+
+{% endblock %}

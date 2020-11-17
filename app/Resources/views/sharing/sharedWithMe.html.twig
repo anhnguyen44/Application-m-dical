@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dossiers partagés avec moi{% endblock %}
+{% block headline %}Les dossiers partagés avec moi{% endblock %}
+{% block body %}
+
+    <table class="table table-striped ">
+        <thead>
+        <tr>
+            <td><strong><i>ID Patient</i></strong></td>
+            <td><strong><i>Nom du patient </i></strong></td>
+            <td><strong><i>Nom d'utilisateur du médecin </i></strong></td>
+            <td><strong><i>Partagé jusqu'à </i></strong></td>
+            <td><strong><i></i></strong></td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in listShared | sortbyfield(1) %}
+            <tr>
+                <td> {{ item[0] }}</td>
+                <td> {{ item[1] }} {{ item[2] }} </td>
+                <td> {{ item[3] }}</td>
+                {% if(item[4] != null) %}
+                    <td> {{ item[4]|date('d/m/Y') }} </td>
+                {% else %}
+                    <td> N/A </td>
+                {% endif %}
+                <td>
+                    <table>
+                        <tr>
+                            <td class="col-md-1">
+                                <form action="viewpatient" id="form_show" name="form_show" method="GET">
+                                    <input type="hidden" id='patientId' name="patientId" value='{{ item[0] }}'>
+                                    <input type='submit' value='Consulter' class="btn btn-primary _test_consult_patient">
+                                </form>
+                            </td>
+                        </tr>
+                    </table>
+
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    
+{% endblock %}
+

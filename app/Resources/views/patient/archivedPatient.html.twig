@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+{% import 'patient/utilitaire.html.twig' as util %}
+{% import 'patient/buttons.twig' as button %}
+
+{% block title %}Consulter un dossier archivé{% endblock %}
+{% block headline %}Consulter un dossier archivé{% endblock %}
+{% block body %}
+    
+    {% if patient == null %}
+        
+        <p class="medium">Sélectionnez le dossier à consulter :</p>
+        {{ util.search_patient(listPatient, "POST", "Consulter", null) }}
+
+    {% else %}
+
+
+
+        <div class="row">
+
+            <div class="col-sm-8">
+                <div class="well">
+
+                    {{ util.data(patient, false, null) }}
+                    {{ util.content(user, patient, evaluators, false) }}
+                    {{ util.modal() }}
+
+                </div>
+            </div>
+
+
+            <div class="col-sm-4" >
+                <div class="well affix" style="overflow-y: scroll; max-height: 500px; top: 90px;">
+
+                    <div class="row">
+                        <div class="col-sm-12" align="center">
+                            <div class="btn-group">
+
+                                <style>
+                                    .btn {
+                                        -webkit-border-radius: 0;
+                                        -moz-border-radius: 0;
+                                        border-radius: 0;
+                                    }
+                                </style>
+
+                                {% if (is_granted('ROLE_MEDICAL') and patient.getOwner == user) or is_granted('ROLE_SECRETARY') %}
+                                    {{ button.unarchive_patient(patient) }}
+                                    {{ button.delete_patient(patient) }}
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+
+        </div>
+            
+        {% endif %}
+    
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes dossiers partagés{% endblock %}
+{% block headline %}Mes dossiers partagés{% endblock %}
+{% block body %}
+       
+    <table class="table table-striped ">
+        <thead>
+        <tr>
+            <td><strong><i>ID Patient</i></strong></td>
+            <td><strong><i>Nom du patient </i></strong></td>
+            <td><strong><i>Nom de l'évaluateur </i></strong></td>
+            <td><strong><i>Spécialité de l'évaluteur</i></strong></td>
+            <td><strong><i>Partagé jusqu'à </i></strong></td>
+            <td><strong><i>Annuler le partage </i></strong></td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in listShared | sortbyfield(1) %}
+            <tr>
+                <td> {{ item[0] }}</td>
+                <td> {{ item[1] }} {{ item[2] }} </td>
+                <td> {{ item[3] }}</td>
+                <td> {{ item[4].getSpeciality }}  </td>
+                <td> {{ item[5] | date('d/m/Y') }} </td>
+                <td>
+                    <form action="cancelsharing" id="form_show" name="form_show" method="POST">
+
+                        {% if item[6] != null %}
+                            <input type="hidden" id='idACL' name="idACL" value='{{ item[6] }}'>
+                            <input type='submit' value='Annuler' class="btn btn-xs btn-danger" onclick="confirm('Êtes-vous sûr de vouloir annuler le partage ?') || event.preventDefault()">
+                        {% else %}
+                            A réaliser dans "modifier un dossier"
+                        {% endif %}
+
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}
+

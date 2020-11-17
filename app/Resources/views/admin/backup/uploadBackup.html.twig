@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} Upload {% endblock %}
+
+{% block body %}
+
+    {# pas dans base.html.twig, On évite ainsi de mettre ce script sur toutes les pages #}
+
+    <h2>Envoyer une sauvegarde</h2>
+    <h4>
+        Permet une reprise à partir d'une sauvegarde effectué dans une précédente version du site
+        <a href="#" class="link tooltip-link" data-toggle="tooltip" data-placement="bottom"
+           data-original-title="La version du site lors de la sauvegarde doit être compatible avec la version actuelle">
+            <span class="glyphicon glyphicon-warning-sign"></span>
+        </a>
+
+    </h4>
+    <br><br>
+
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <h4>Sélectionnez un fichier de sauvegarde</h4>
+            <br />
+            <div id="filelist" class=""></div>
+
+            <div class="progress" id="uploadMainProgressBar">
+                <div role="progressbar" id="uploadProgressBar"
+                     class="progress-bar progress-bar-striped progress-bar-animated"
+                     aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                </div>
+            </div>
+
+            <div class="btn-group" role="group" aria-label="Selection du fichier de sauvegarde">
+                <button onclick="removeQueuedFile();" id="remove_queued_file" class="btn btn-danger">
+                    <span class="glyphicon glyphicon-remove" style="margin:0px;"></span>
+                </button>
+                <label for="browse_backup" class="btn btn-primary" href="javascript:;">
+                    <input type="file" id="browse_backup" style="display:none;"/>
+                    <span class="glyphicon glyphicon-cloud-upload"></span>
+                    Fichier à envoyer
+                </label>
+                <button class="btn btn-success" id="start-upload" href="javascript:;">
+                    <span class="glyphicon glyphicon-send"></span>
+                    Envoyer
+                </button>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            {# La console est mise a jour avec les erreurs que plupload à émis #}
+            <pre id="console"></pre>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="{{ asset('js/plupload.full.min.js') }}"></script>
+    <script type="text/javascript">
+        // Voir ici pour les options: https://github.com/moxiecode/plupload/wiki/Options
+        // IDEA: Pourrait etre transformé grace à JQuery: https://github.com/moxiecode/plupload/wiki/pluploadQueue
+        var uploader = new plupload.Uploader({
+            runtimes: "html5,silverlight",
+            browse_button: 'browse_backup', // this can be an id of a DOM element or the DOM element itself
+            url: '{{ path("homepage") }}uploadBackup',
+            chunk_size: '1024kb',  // Pourrait etre extrait dans le fichier de configuration des sauvegardes !
+            max_retries: 3,
+            filters: {
+                mime_types: [{  // demi sécurité, car coté front, on est bien d'accord
+                    title: "7zip Files",
+                    extensions: "7z"
+                }],
+                prevent_duplicates: true,
+                prevent_empty: true
+            },
+            multi_selection: false
+        });
+
+        var queued_file = null;  // TODO: a transformer en objet avec remove en méthode
+        $("#uploadMainProgressBar").hide();
+        $("#uploadProgressBar").css("width", "0%");
+        uploader.init();
+
+        var removeQueuedFile = function() {  // méthode remove de l'objet QueuedFile
+            if (queued_file != null) {
+                uploader.removeFile(queued_file);
+                $("#filelist").removeClass("alert alert-info");
+                $("#filelist").text("");
+                $("#uploadMainProgressBar").hide();
+                queued_file = null;
+            }            
+        }
+
+        uploader.bind('FilesAdded', function(up, files) {
+            // on s'assure qu'il n'y ai pas de fichiers dans la file, cela permet à
+            // l'utilisateur de changer de fichier en cliquant sur "envoyer une sauvegarde"
+            removeQueuedFile();
+
+            $("#filelist").addClass("alert alert-info");
+            $("#uploadMainProgressBar").show();
+            plupload.each(files, function(file) {
+                queued_file = file;
+                $("#filelist").text(file.name + ' (' + plupload.formatSize(file.size) + ')');
+            });
+        });
+
+        uploader.bind('UploadProgress', function(up, file) {
+            $("#uploadProgressBar").css("width", file.percent + "%");
+        });
+
+        uploader.bind('FileUploaded', function(up, file, dummy_response) {
+            $("#filelist").toggleClass("alert-info alert-success");
+            // TODO: Ajouter celui en alert-danger qui dit que l'envoi n'a pas fonctionner
+            // Pour cela on pourrais changer la fonction du bind Errors pour qu'elle change
+            // filelist en alert-danger au bout des max_retries du uploader.
+            $("#filelist").text("Le fichier à bien été envoyé");
+            $("#uploadMainProgressBar").hide();
+        })
+
+        uploader.bind('Error', function(up, err) {
+            document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
+        });
+
+
+        document.getElementById('start-upload').onclick = function() {
+            uploader.start();
+        };
+    </script>
+
+
+{% endblock %}

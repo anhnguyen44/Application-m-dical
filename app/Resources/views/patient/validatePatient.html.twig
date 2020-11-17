@@ -1,0 +1,418 @@
+{% extends 'base.html.twig' %}
+{% import 'patient/utilitaire.html.twig' as util %}
+{% import 'patient/buttons.twig' as button %}
+
+{% block title %}Valider un dossier{% endblock %}
+{% block headline %}Modification en attente{% endblock %}
+{% block body %}
+
+    {% if form == null %}
+    
+            <p class="medium">Sélectionnez le dossier :</p>
+            {{ util.search_patient(listPatient, "GET", "Selectionner", null) }}
+
+    {% else %}
+
+        {% if is_granted('ROLE_MEDICAL') %}
+            
+            {{ form_start(form, {'attr': {'id': 'form_edit','enctype': 'multipart/form-data'}}) }}
+            {{ form_errors(form) }}
+
+            {{ util.data(patient, true, form) }}
+
+            {% set categorie = [
+                "Appareillage",
+                "Bilans médicaux",
+                "Certificats",
+                "Consultations",
+                "Courriers",
+                "Divers",
+                "Médecin",
+                "Ergotherapie",
+                "Infirmerie",
+                "Kinésithérapie",
+                "Musicothérapie",
+                "Neuropsychologue",
+                "Orthophonie",
+                "Psychologue",
+                "Psychomotricité",
+                "Radios"
+            ] %}
+
+            {% set nbrComments = 0 %}
+            <div class="form-group fg-comments">
+                <label class="col-sm-2 control-label required" for="appbundle_member_data">
+                    Commentaires :
+                </label>
+                <div class="col-sm-10 commentSection">
+                    {% for idEvalComments, nameEvalComments in evalComments %}
+                        {% for key, value in patient.getData['comments'] %}
+                            {% if value['pro_id'] == idEvalComments %}
+                                {% if value['validation'] == 0 or value['validation'] == 2 %}
+                                    {% set nbrComments = nbrComments + 1 %}
+
+                                    {% if is_granted('ROLE_MEDICAL') %}
+
+                                        <div class="row">
+
+                                            {{ util.validation("comments", key)}}
+
+                                            <textarea id="appbundle_member_data" disabled="disabled" class="form-control">{{ value['comm'] }}</textarea>
+                                            <label class="pull-right">Commentaire de
+                                                {{ nameEvalComments }}
+                                                pour la catégorie
+                                                {{ categorie[value['categorie']] }}
+                                                &bull; Rédigé le :
+                                                {{ value['created_at'] }}
+                                            </label>
+                                        </div>
+                                    {% else %}
+                                        <div class="row">
+                                            <textarea id="appbundle_member_data" disabled="disabled" class="form-control">{{ value['comm'] }}</textarea>
+                                            <label class="pull-right">Commentaire de
+                                                {{ nameEvalComments }}
+                                                pour la catégorie
+                                                {{ categorie[value['categorie']] }}
+                                                &bull; Rédigé le :
+                                                {{ value['created_at'] }}
+                                            </label>
+                                        </div>
+
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+
+                    {% endfor %}
+                </div>
+            </div>
+            <input type="hidden" name="nbrComments" value="{{ nbrComments }}">
+
+            {% set nbrImages = 0 %}
+            <div class="form-group fg-images">
+                <label class="col-sm-2 control-label required" for="appbundle_member_data">
+                    Images :
+                </label>
+                <div class="container-fluid">
+                    <div class="row imageSection flexrow">
+                        {% for idEvalImages, nameEvalImages in evalImages %}
+                            {% set images = patient.getData["images"] %}
+                            {% if images != null %}
+                                {% for key, image in images %}
+                                    {% if (image['pro_id'] == idEvalImages) %}
+                                        {% if image['validation'] == 0 or image['validation'] == 2 %}
+                                            {% set nbrImages = nbrImages + 1 %}
+                                            <div class="col-lg-3 col-sm-4 col-xs-6">
+
+                                                <a href="#">
+                                                    <img class="thumbnail img-responsive test" src="download/image?filePath={{image['path']}}&fileName={{image['name']}}">
+                                                </a>
+
+                                                <label class="pull-right">Photo de
+                                                    {{ nameEvalImages }}
+                                                    pour la catégorie
+                                                    {{ categorie[image['categorie']] }}
+                                                    <br>
+                                                    Rédigé le :
+                                                    {{ image['created_at'] }}
+                                                </label>
+                                            </div>
+                                            {% if is_granted('ROLE_MEDICAL') %}
+
+                                                {{ util.validation("images", key)}}
+
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" name="nbrImages" value="{{ nbrImages }}">
+
+            {% set nbrVideos = 0 %}
+            <div class="form-group fg-videos">
+                <label class="col-sm-2 control-label required" for="appbundle_member_data">
+                    Vidéos :
+                </label>
+                <div class="container-fluid">
+                    <div class="row videoSection flexrow">
+                        {% for idEvalVideos, nameEvalVideos in evalVideos %}
+                            {% set videos = patient.getData["videos"] %}
+                            {% if videos != null %}
+                                {% for key, video in videos %}
+                                    {% if (video['pro_id'] == idEvalVideos) %}
+                                        {% if video['validation'] == 0 or video['validation'] == 2 %}
+                                            {% set nbrVideos = nbrVideos + 1 %}
+
+                                            <div class="thumbVideo embed-responsive-16by9">
+
+                                                <video controls="controls" style="max-width: 100%">
+                                                    <source src="download/video?filePath={{video['path']}}&fileName={{video['name']}}" type="video/mp4">
+                                                    Votre navigateur ne supporte pas les vidéos HTML5.
+                                                </video>
+
+                                            </div>
+                                            <label class="pull-right">Vidéo de
+                                                {{ nameEvalVideos }}
+                                                pour la catégorie
+                                                {{ categorie[video['categorie']] }}
+                                                <br>
+                                                Rédigé le :
+                                                {{ video['created_at'] }}
+                                            </label>
+
+                                            {% if is_granted('ROLE_MEDICAL') %}
+
+                                                {{ util.validation("videos", key)}}
+
+                                            {% endif %}
+
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="nbrVideos" value="{{ nbrVideos }}">
+
+            {% set nbrFiles = 0 %}
+            <div class="form-group fg-files">
+                <label class="col-sm-2 control-label required" for="appbundle_member_data">
+                    Fichiers :
+                </label>
+                <div class="container-fluid">
+                    <div class="row fileSection flexrow">
+                        {% for idEvalFiles, nameEvalFiles in evalFiles %}
+                            {% set files = patient.getData["files"] %}
+                            {% if files != null %}
+                                <ul class="list-group">
+                                    {% for key, file in files %}
+                                        {% if (file['pro_id'] == idEvalFiles) %}
+                                            {% if file['validation'] == 0 or file['validation'] == 2 %}
+                                                {% set nbrFiles = nbrFiles + 1 %}
+                                                <li class="list-group-item">
+
+                                                    <!-- Requête GET sur la route validatepatient pour déchiffrer et télécharger les fichiers -->
+                                                    <a href='download/file?&filePath={{ file['path'] }}&fileName={{ file['name'] }}'>{{ file['name'] }}</a>
+                                                    {% if is_granted('ROLE_MEDICAL') %}
+                                                        <br>
+
+                                                        {{ util.validation("files", '{{key}}')}}
+
+                                                    {% endif %}
+                                                </li>
+
+                                                <label class="pull-right">Fichier de
+                                                    {{ nameEvalFiles }}
+                                                    pour la catégorie
+                                                    {{ categorie[file['categorie']] }}
+                                                    &bull; Rédigé le :
+                                                    {{ file['created_at'] }}
+                                                </label>
+                                                <br><br>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="nbrFiles" value="{{ nbrFiles }}">
+
+            {{ button.validate_edit_patient() }}
+            {{ form_end(form) }}
+
+        {% else %}
+
+            {% set categorie = [
+                "Appareillage",
+                "Bilans médicaux",
+                "Certificats",
+                "Consultations",
+                "Courriers",
+                "Divers",
+                "Médecin",
+                "Ergotherapie",
+                "Infirmerie",
+                "Kinésithérapie",
+                "Musicothérapie",
+                "Neuropsychologue",
+                "Orthophonie",
+                "Psychologue",
+                "Psychomotricité",
+                "Radios"
+            ] %}
+
+            {% set nbrComments = 0 %}
+            <div class="form-group fg-comments">
+                <label class="col-sm-2 control-label required" for="appbundle_member_data">
+                    Commentaires :
+                </label>
+                <div class="col-sm-10 commentSection">
+                    {% for idEvalComments, nameEvalComments in evalComments %}
+                        {% for key, value in patient.getData['comments'] %}
+                            {% if value['pro_id'] == idEvalComments %}
+                                {% if idEvalComments == user.getId %}
+                                    {% if value['validation'] == 0 or value['validation'] == 2 %}
+                                        {% set nbrComments = nbrComments + 1 %}
+
+                                            <div class="row">
+                                                <textarea id="appbundle_member_data" disabled="disabled" class="form-control">{{ value['comm'] }}</textarea>
+                                                <label class="pull-right">Commentaire de
+                                                    {{ nameEvalComments }}
+                                                    pour la catégorie
+                                                    {{ categorie[value['categorie']] }}
+                                                    &bull; Rédigé le :
+                                                    {{ value['created_at'] }}
+                                                </label>
+                                            </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+
+                    {% endfor %}
+                </div>
+            </div>
+            <input type="hidden" name="nbrComments" value="{{ nbrComments }}">
+
+            {% set nbrImages = 0 %}
+            <div class="form-group fg-images">
+                <label class="col-sm-2 control-label required" for="appbundle_member_data">
+                    Images :
+                </label>
+                <div class="container-fluid">
+                    <div class="row imageSection flexrow">
+                        {% for idEvalImages, nameEvalImages in evalImages %}
+                            {% set images = patient.getData["images"] %}
+                            {% if images != null %}
+                                {% for key, image in images %}
+                                    {% if (image['pro_id'] == idEvalImages) %}
+                                        {% if image['validation'] == 0 or image['validation'] == 2 %}
+                                            {% set nbrImages = nbrImages + 1 %}
+                                            <div class="col-lg-3 col-sm-4 col-xs-6">
+
+                                                <a href="#">
+                                                    <img class="thumbnail img-responsive test" src="download/image?filePath={{image['path']}}&fileName={{image['name']}}">
+                                                </a>
+
+                                                <label class="pull-right">Photo de
+                                                    {{ nameEvalImages }}
+                                                    pour la catégorie
+                                                    {{ categorie[image['categorie']] }}
+                                                    <br>
+                                                    Rédigé le :
+                                                    {{ image['created_at'] }}
+                                                </label>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" name="nbrImages" value="{{ nbrImages }}">
+
+            {% set nbrVideos = 0 %}
+            <div class="form-group fg-videos">
+                <label class="col-sm-2 control-label required" for="appbundle_member_data">
+                    Vidéos :
+                </label>
+                <div class="container-fluid">
+                    <div class="row videoSection flexrow">
+                        {% for idEvalVideos, nameEvalVideos in evalVideos %}
+                            {% set videos = patient.getData["videos"] %}
+                            {% if videos != null %}
+                                {% for key, video in videos %}
+                                    {% if (video['pro_id'] == idEvalVideos) %}
+                                        {% if video['validation'] == 0 or video['validation'] == 2 %}
+                                            {% set nbrVideos = nbrVideos + 1 %}
+
+                                            <div class="thumbVideo embed-responsive-16by9">
+
+                                                <video controls="controls" style="max-width: 100%">
+                                                    <source src="download/video?filePath={{video['path']}}&fileName={{video['name']}}" type="video/mp4">
+                                                    Votre navigateur ne supporte pas les vidéos HTML5.
+                                                </video>
+
+                                            </div>
+                                            <label class="pull-right">Vidéo de
+                                                {{ nameEvalVideos }}
+                                                pour la catégorie
+                                                {{ categorie[video['categorie']] }}
+                                                <br>
+                                                Rédigé le :
+                                                {{ video['created_at'] }}
+                                            </label>
+
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="nbrVideos" value="{{ nbrVideos }}">
+
+            {% set nbrFiles = 0 %}
+            <div class="form-group fg-files">
+                <label class="col-sm-2 control-label required" for="appbundle_member_data">
+                    Fichiers :
+                </label>
+                <div class="container-fluid">
+                    <div class="row fileSection flexrow">
+                        {% for idEvalFiles, nameEvalFiles in evalFiles %}
+                            {% set files = patient.getData["files"] %}
+                            {% if files != null %}
+                                <ul class="list-group">
+                                    {% for key, file in files %}
+                                        {% if (file['pro_id'] == idEvalFiles) %}
+                                            {% if file['validation'] == 0 or file['validation'] == 2 %}
+                                                {% set nbrFiles = nbrFiles + 1 %}
+                                                <li class="list-group-item">
+
+                                                    <!-- Requête GET sur la route validatepatient pour déchiffrer et télécharger les fichiers -->
+                                                    <a href='download/file?&filePath={{ file['path'] }}&fileName={{ file['name'] }}'>{{ file['name'] }}</a>
+                                                </li>
+
+                                                <label class="pull-right">Fichier de
+                                                    {{ nameEvalFiles }}
+                                                    pour la catégorie
+                                                    {{ categorie[file['categorie']] }}
+                                                    &bull; Rédigé le :
+                                                    {{ file['created_at'] }}
+                                                </label>
+                                                <br><br>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="nbrFiles" value="{{ nbrFiles }}">
+
+        {% endif %}
+
+        
+   
+    {% endif %}
+
+    {{ util.modal() }}
+
+
+{% endblock %}

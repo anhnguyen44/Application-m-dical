@@ -1,0 +1,136 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} Configurer la sauvegarde {% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        var rotationForm = document.getElementById('rotationForm');
+        var checkboxRotation = document.getElementById('rotationForm_rotationenabled');
+        var inputRotation = document.getElementById('rotationForm_saverotation');
+        var schedulingForm = document.getElementById('schedulingForm');
+        var checkboxScheduling = document.getElementById('schedulingForm_schedulingenabled');
+        var inputFrenquencyScheduling = document.getElementById('schedulingForm_frequencyscheduling');
+        
+        
+        checkboxRotation.onchange = function() {
+            if (this.checked) {rotationForm.style.display = 'block'}
+            else {rotationForm.style.display = 'none'}
+        }
+        checkboxScheduling.onchange = function() {
+            if (this.checked) {schedulingForm.style.display = 'block'}
+            else {schedulingForm.style.display = 'none'}
+        }
+        hideForms = function() {
+            
+            if (inputRotation.value == '' || inputRotation.value == 0){
+                inputRotation.value = 0; // Symfony écrit une chaîne vide quand la valeur enregistrée est zéro, donc on force à écrire 0 pour l'utilisateur
+                checkboxRotation.checked = false;
+            }else{checkboxRotation.checked = true;}
+
+            if (inputFrenquencyScheduling.value == '' || inputFrenquencyScheduling.value == 0){
+                inputFrenquencyScheduling.value = 0; // Symfony écrit une chaîne vide quand la valeur enregistrée est zéro, donc on force à écrire 0 pour l'utilisateur
+                checkboxScheduling.checked = false;
+            }else{checkboxScheduling.checked = true;}
+
+            if (!checkboxRotation.checked) {rotationForm.style.display = 'none';}
+            if (!checkboxScheduling.checked) {schedulingForm.style.display = 'none';}
+        }
+        window.onload = hideForms
+
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <h2>Configurer la sauvegarde</h2>
+    <h4>Les modifications sur la rotation seront prises en compte lors de la prochaine sauvegarde</h4>
+    <br><br>
+    
+    {{ form_start(rotationForm) }}
+    {{ form_errors(rotationForm) }}
+        <div class="form-group">
+            <label class="col-sm-3 control-label required">
+                Rotation des sauvegardes
+                <a href="#" class="link tooltip-link" data-toggle="tooltip" data-placement="bottom" data-original-title="Cocher pour activer la rotation des sauvegardes, afin de ne conserver que les sauvegardes les plus récentes.">
+                    <span class="glyphicon glyphicon-info-sign"></span>
+                </a>
+            </label>
+            <div class="col-sm-5">
+                {{ form_widget(rotationForm.rotationenabled) }}
+                {{ form_errors(rotationForm.rotationenabled) }}
+            </div>
+            <br><br>
+            <div id="rotationForm">
+                <label class="col-sm-3 control-label required">
+                    Nombre de sauvegardes à conserver
+                </label>
+                <div class="col-sm-1">
+                    {{ form_widget(rotationForm.saverotation) }}
+                    {{ form_errors(rotationForm.saverotation) }}
+                </div>
+            </div>
+        </div>
+    {{ form_end(rotationForm) }}
+
+    {{ form_start(schedulingForm) }}
+    {{ form_errors(schedulingForm) }}
+            <br><br>
+            <label class="col-sm-3 control-label required">
+                Planification des sauvegardes
+                <a href="#" class="link tooltip-link" data-toggle="tooltip" data-placement="bottom" data-original-title="Cocher pour activer la planification des sauvegardes, afin de lancer les sauvegardes automatiquement à intervalles réguliers.">
+                    <span class="glyphicon glyphicon-info-sign"></span>
+                </a>
+            </label>
+            <div class="col-sm-1">
+                {{ form_widget(schedulingForm.schedulingenabled) }}
+                {{ form_errors(schedulingForm.schedulingenabled) }}
+            </div>
+            <div id="schedulingForm">
+                <br><br>
+                <label class="col-sm-3 control-label required">
+                    Nombre de jours entre deux sauvegardes
+                </label>
+                <div class="col-sm-1">
+                    {{ form_widget(schedulingForm.frequencyscheduling) }}
+                    {{ form_errors(schedulingForm.frequencyscheduling) }}
+                </div>
+                <br><br>
+                <br><br>
+                <label class="col-sm-3 control-label required">
+                    Heure des sauvegardes
+                </label>
+                <div class="col-sm-2">
+                    {{ form_widget(schedulingForm.hourscheduling) }}
+                    {{ form_errors(schedulingForm.hourscheduling) }}
+                </div>
+                <br><br> <br><br>
+                <div class="col-sm-9">
+                    Les deux champs ci-dessous ne sont requis que lors de la première configuration de la planification
+                </div>
+                <br><br>
+                <label class="col-sm-3 control-label required">
+                    Compte Windows associé 
+                </label>
+                <div class="col-sm-4">
+                    {{ form_widget(schedulingForm.windowsname) }}
+                    {{ form_errors(schedulingForm.windowsname) }}
+                </div>
+                <br><br>
+                <label class="col-sm-3 control-label required">
+                    Mot de passe 
+                </label>
+                <div class="col-sm-4">
+                    {{ form_widget(schedulingForm.windowspassword) }}
+                    {{ form_errors(schedulingForm.windowspassword) }}
+                </div>
+                <br><br><br><br>
+                <label class="col-sm-3 control-label required">
+                    Clé de chiffrement des sauvegardes planifiées
+                </label>
+                <div class="col-sm-6">
+                    {{ form_widget(schedulingForm.encryptionkey) }}
+                    {{ form_errors(schedulingForm.encryptionkey) }}
+                </div>
+            </div>            
+    {{ form_end(schedulingForm) }}
+{% endblock %}

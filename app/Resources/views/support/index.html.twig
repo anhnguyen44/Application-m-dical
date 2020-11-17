@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1 class="display-4">Dossier Medical</h1>
+                <p class="lead">Bienvenue sur la base de données locale de l'établissement.</p>
+            </div>
+        </div>
+
+    {% if is_granted('ROLE_MEDICAL') or is_granted('ROLE_PARAMEDICAL') %}
+
+            {#<h4> Pour créer un nouveau dossier, veuillez remplir l'évaluation sur le site MersureOnline d'abord.</h4>#}
+
+            {% if response == true %}
+                <div class="well row notify">
+                    <h4><b>Notifications : </b></h4>
+                    {% for message in app.flashes('notif') %}
+                        <a class=" flash-notice alert-info" href="{{ path('notifications') }}">{{ message }}</a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+    {% endif %}
+
+{% endblock %}

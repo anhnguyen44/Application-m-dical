@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Changer le médecin soignant{% endblock %}
+{% block headline %}Changer le médecin soignant{% endblock %}
+{% block body %}
+
+    <p class="medium">Sélectionnez le dossier du patient :</p>
+    <form id="form_show" name="form_show" method="POST">
+        <select
+                id="patientId"
+                name="patientId"
+                class="form-control">
+            {% for patient in listPatient %}
+                <option id='patientId' value='{{ patient.getPatientId }}'> {{ patient.getNom }} {{ patient.getPrenom }} </option>
+            {% endfor %}
+        </select>
+        <br>
+        <p class="medium">Sélectionnez le nouveau médecin soignant :</p>
+        <select
+                id="proId"
+                name="proId"
+                class="form-control">
+
+            {% for pro in listPro %}
+                <option id='proId' value='{{ pro.getId }}'> {{ pro.getUsername }} </option>
+            {% endfor %}
+        </select>
+        <br>
+        <input type='submit' value='Enregistrer' class="btn btn-default">
+    </form>
+
+{% endblock %}

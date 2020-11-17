@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Spécialités existantes{% endblock %}
+{% block headline %}Spécialités existantes{% endblock %}
+{% block body  %}
+    
+    <table class="row table table-responsive">
+        <thead>
+        <tr>
+            <th>Métier</th>
+            <th>Spécialité</th>
+            <th>Rôle</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for speciality in specialities %}
+            <tr>
+                <td> {{ speciality.occupation == 'medical' ? 'Médical' : 'Paramédical'  }} </td>
+                <td> {{ speciality.speciality }} </td>
+                <td> {{ speciality.role }} </td>
+                <td>
+                    <form id="form_show" name="form_show" method="GET">
+                        <input type="hidden" name="rename" value='{{ speciality.getId }}'>
+                        <input type='submit' value='Renommer' class="btn btn-primary btn-xs">
+                    </form>
+                </td>
+                
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <br><br>
+
+{% endblock %}

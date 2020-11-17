@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8"/>
+    <title>MesureLocal : Base de données locale - {% block title %}{% endblock %}</title>
+
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css') }} "/>
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }} "/>
+
+    <script type="text/javascript" src="{{ asset('js/moment.min.js') }} "></script>
+    <script type="text/javascript" src="{{ asset('js/jquery.min.js') }} "></script>
+    <script type="text/javascript" src="{{ asset('js/script.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/bootstrap.min.js') }} "></script>
+    <script type="text/javascript" src="{{ asset('js/bootstrap-datetimepicker.min.js') }} "></script>
+    <script type="text/javascript" src="{{ asset('js/bootstrap-datepicker.js') }} "></script>
+    <script type="text/javascript" src="{{ asset('js/datepicker.fr.min.js') }} "></script>
+    <script type="text/javascript" src="{{ asset('js/datetimepicker.fr.min.js') }} "></script>
+
+    {% block stylesheets %}{% endblock %}
+
+    
+
+</head>
+
+<body>
+
+    <header>
+        {% include 'header.html.twig' %}
+    </header>
+
+    <div class="page-body">
+
+        <div class="container">
+
+            {% if is_granted('ROLE_ADMIN') %}
+                {% include 'menubars/admin.html.twig' %}
+
+            {% elseif is_granted('ROLE_MEDICAL') %}
+                {% include 'menubars/medical.html.twig' %}
+
+            {% elseif is_granted('ROLE_SECRETARY')%}
+                {% include 'menubars/secretary.html.twig' %}
+
+            {% elseif is_granted('ROLE_PARAMEDICAL') %}
+                {% include 'menubars/paramedical.html.twig' %}
+
+            {% endif %}
+
+            <h2>{% block headline %}{% endblock %}</h2>
+
+            <br><br>
+            {# Afficher le message notice #}
+            {% for message in app.flashes('notice') %}
+                    <div class="flash-notice alert alert-success" role="alert">{{ message }}</div>
+            {% endfor %}
+            
+            {# Afficher le message alert #}
+            {% for message in app.flashes('alert') %}
+                <div class="flash-notice alert alert-danger" role="alert">{{ message }}</div>
+            {% endfor %}
+            
+            {% block body %}{% endblock %}
+
+        </div>
+
+    </div>
+
+    {% block javascripts %}{% endblock %}
+
+
+    <br><br>
+    {% include 'footer.html.twig' %}
+
+</body>
+</html>

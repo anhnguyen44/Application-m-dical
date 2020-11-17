@@ -1,0 +1,59 @@
+
+
+{% macro edit_patient(patient) %}
+    <form action="editpatient" id="form_show" name="form_show" method="GET" class="btn-group">
+        <input type="hidden" id='patientId' name="patientId" value='{{ patient.getPatientId }}'>
+        <button type='submit' class="btn btn-primary _test_button_edit">Modifier</button>
+    </form>
+{% endmacro %}
+
+
+{% macro archive_patient(patient) %}
+    <form action="archivepatient" id="form_show" name="form_show" method="POST" class="btn-group">
+        <input type="hidden" id='patientId' name="patientId" value='{{ patient.getPatientId }}'>
+        <button type='submit' class="btn btn-warning _test_button_archive" onclick="confirm('Êtes-vous sûr de vouloir archiver le dossier ?') || event.preventDefault()">Archiver</button>
+    </form>
+{% endmacro %}
+
+
+{% macro unarchive_patient(patient) %}
+    <form action="unarchivepatient" id="form_show" name="form_show" method="POST" class="btn-group">
+        <input type="hidden" id='patientId' name="patientId" value='{{ patient.getPatientId }}'>
+        <button type='submit' class="btn btn-warning _test_button_unarchive">Désarchiver</button>
+    </form>
+{% endmacro %}
+
+
+{% macro healthcare_patient(patient) %}
+    <form action="{{ patient.getId }}/healthcare/" id="form_show" name="form_show" method="GET" class="btn-group">
+        <button type='submit' class="btn btn-info _test_button_healthcare">Gestion des soins</button>
+    </form>
+{% endmacro %}
+
+
+{% macro delete_patient(patient) %}
+    <form action="deletepatient" id="form_show" name="form_show" method="POST"  class="btn-group">
+        <input type="hidden" id='patientId' name="patientId" value='{{ patient.getPatientId }}'>
+        <button type='submit' class="btn btn-danger _test_button_delete" onclick="confirm('Êtes-vous sûr de vouloir supprimer définitivement le dossier ?') || event.preventDefault()">Supprimer</button>
+    </form>
+{% endmacro %}
+
+
+
+
+
+{% macro create_patient() %}
+    <td width="100">
+        <input type="submit" value="Créer le patient" class="btn btn-success _test_sumit" />
+    </td>
+{% endmacro %}
+
+
+{% macro validate_edit_patient() %}
+    <button type="submit" class="btn btn-success _test_sumit">Valider</button>
+{% endmacro %}
+
+{% macro validate_patient() %}
+    <button type="submit" class="btn btn-success _test_sumit">Valider</button>
+{% endmacro %}
+

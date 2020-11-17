@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Consulter la liste des comptes{% endblock %}
+{% block headline %}Consulter la liste des comptes{% endblock %}
+{% block body %}
+
+    <table class="table table-striped ">
+        <thead>
+        <tr>
+            <th> ID </th>
+            <th> Nom d'utilisateur </th>
+            <th> Rôle </th>
+            <th> Spécialité </th>
+            <th> Bloqué </th>
+            <th width="200"> Action </th>
+        </tr> 
+        </thead>
+        <tbody>
+        
+        {% for user in users | sortbyfield('username') %}
+            <tr>
+
+            {% if user != userToChange %}
+            
+                <td> {{ user.getId }} </td>
+                <td width="200"> {{ user.getUsername }} </td>
+                <td> {{ user.getRoles[0] }} </td>
+                <td> {{ user.getSpeciality.getSpeciality }} </td>
+                <td> {{ user.isAccountNonLocked ? 'Non' : 'Oui' }}</td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                            {% if user.getRoles[0] == 'ROLE_PARAMEDICAL' %}
+                                <form id="form_show" name="form_show" method="GET">
+                                    <input type="hidden" id='id' name="id" value='{{ user.getId }}'>
+                                    <input type='submit' value='Modifier' class="btn btn-primary btn-xs">
+                                </form>
+                            {% endif %}
+                            </td>
+                            <td  class="col-lg-10">
+                                <form action="deleteuser" id="form_show" name="form_show" method="POST">
+                                    <input type="hidden" id='id' name="id" value='{{ user.getId }}'>
+                                    <input type='submit' value='Supprimer' class="btn btn-danger btn-xs" onclick="confirm('Êtes-vous sûr de vouloir supprimer définitivement cet utilisateur ?') || event.preventDefault()">
+                                </form>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            
+            {% else %}
+
+                {{ form_start(form, {'attr': {'id': 'form_create'}}) }}
+                {{ form_errors(form) }}
+
+                    <td>{{ user.getId }}</td>
+                    <td>{{ form_widget(form.username, {'attr': {'class': 'dropdown-header col-xs'}}) }}</td>
+                    <td>{{ user.getRoles[0] }}</td>
+                    <td>{{ form_widget(form.speciality, {'attr': {'class': 'dropdown-header col-xs'}}) }}</td>
+                    <td>{{ form_widget(form.nonlocked) }}</td>
+                    <td>{{ form_widget(form.Enregistrer, {'attr': {'class': 'btn btn-primary btn-xs btn-primary'}}) }}</td>
+
+                {{ form_widget(form.notificationType, {'attr': {'class': 'hidden'}}) }}
+                {{ form_widget(form.notificationValue, {'attr': {'class': 'hidden'}}) }}
+                {{ form_end(form) }}
+
+                {% endif %}
+            </tr>
+
+        {% endfor %}
+
+    </table>
+
+{% endblock %}

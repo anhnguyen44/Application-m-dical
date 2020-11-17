@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gérer les spécialités{% endblock %}
+{% block headline %}Renomer une spécialité{% endblock %}
+{% block body  %}
+    
+    <div class="row">
+        
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+
+            {{ form_widget(form.role, { 'attr' : {'class': 'hidden'} }) }}
+            {{ form_widget(form.occupation, { 'attr' : {'class': 'hidden'} }) }}
+
+         {{ form_end(form) }}
+    </div>
+
+{% endblock %}

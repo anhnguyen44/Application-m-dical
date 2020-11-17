@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+{% import 'patient/utilitaire.html.twig' as util %}
+{% import 'patient/buttons.twig' as button %}
+
+
+{% block title %}Ajouter un patient{% endblock %}
+{% block headline %}Ajouter un patient{% endblock %}
+{% block body %}
+
+    {% if form != null %}
+
+        {{ form_start(form, {'attr': {'id': 'form_create', 'enctype': 'multipart/form-data'}}) }}
+        {{ form_errors(form) }}
+
+        {% if is_granted('ROLE_SECRETARY')  %}
+            {{ util.choose_pro(listPro) }}
+        {% endif %}
+
+        {{ util.data(null, true, form) }}
+        {# {{ util.tab("Commentaires", "newComment", "Ajouter un commentaire", "addComment('Médecin')") }}
+        {{ util.tab("Images", "newImage", "Ajouter une photo", "addImage('Médecin')") }}
+        {{ util.tab("Vidéos", "newVideo", "Ajouter une vidéo", "addVideo('Médecin')") }}
+        {{ util.tab("Fichiers", "newFile", "Ajouter un fichier", "addFile('Médecin')") }} #}
+        <p class="text-right">* Champs obligatoires</p>
+
+        {{ button.create_patient() }}
+
+        {{ form_end(form) }}
+    
+    {% endif %}
+    
+    
+{% endblock %}

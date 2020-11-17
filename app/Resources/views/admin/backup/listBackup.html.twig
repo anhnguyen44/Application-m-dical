@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des sauvegardes{% endblock %}
+
+{% block headline %}Liste des sauvegardes{% endblock %}
+{% block body %}
+
+    <h4>Les sauvegardes sont classées de la plus récente à la plus ancienne</h4>
+    
+    <div align="center">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 10%">Numéro</th>
+                    <th style="width: 55%">Date de la sauvegarde</th>
+                    <th style="width: 25%" colspan="3">Actions rapides</th>
+                    <th style="width: 10%">Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for save in saves %}
+                    {#
+                        Bien penser à changer le colspan de la case "Actions rapides" lorsque
+                        vous ajoutez ou enelevez un bouton. Vous pouvez aussi changer les pourcentages
+                        de largeur des entetes pour ainsi placer plus de boutons.
+                    #}
+                    <tr>
+                        <th>{{ loop.index }}</td>
+                        <td>{{ save["french_date"] }}</td>
+                        {% if save['status'] != 'Echec' %}
+                            <td>
+                                <form action="deleteBackup" id="deletebackup" method="POST" >
+                                    <input type='hidden' value='{{ save["date"]}}' name='date'>
+                                    <input type='submit' value='Supprimer' class="btn btn-danger btn-xs" onclick="confirm('Êtes-vous sûr de vouloir supprimer définitivement la sauvegarde ?') || event.preventDefault()">
+                                </form> 
+                            </td>
+                            <td>
+                                <form method="POST" action="downloadBackup" id="downloadBackup">
+                                    <input type='hidden' value='{{ save["date"] }}' name="date">
+                                    <input type="submit" value='Télécharger' class="btn btn-success btn-xs">
+                                </form>
+                            </td>
+                            <td>
+                                <form method="GET" action="restoreBackup" id="restoreBackup">
+                                    <input type='hidden' value='{{ save["date"] }}' name="backup_date">
+                                    <input type="submit" value='Restaurer' class="btn btn-primary btn-xs">
+                                </form>
+                            </td>
+                        {% else %}
+                            <td colspan="3">Sauvegarde non disponible</td>
+                        {% endif %}
+                        <td>
+                            {% if save['status'] == "Disponible" %}
+                                <h4 style="margin-top:3px">  <input type="image" title="Disponible" src="{{ asset('img/backups/ok.png') }}" /> </h4> 
+                            {% elseif save['status'] == "Echec" %}    
+                                <h4 style="margin-top:3px">  <input type="image" title="Echec" src="{{ asset('img/backups/cancel.png') }}" /> </h4> 
+                            {% elseif save['status'] == "En cours" %} 
+                                <h4 style="margin-top:3px"> <input type="image" title="{{ save['step'] }}" src="{{ asset('img/backups/synchronize.png') }}" /> </h4>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+   
+
+{% endblock %}

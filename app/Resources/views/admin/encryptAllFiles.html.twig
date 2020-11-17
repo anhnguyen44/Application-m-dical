@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Chiffrement des dossiers{% endblock %}
+{% block headline %}Chiffrement des données{% endblock %}
+{% block body  %}
+
+
+        <p>Cet utilitaire permet de chiffrer les données contenant les documents des patients, ces derniers seront toujours accessibles en utilisant l'application.</p>
+        <div class="text-danger">
+        <p>Attention, l'opération inverse ne peut être effectuée que manuellement !</p>
+        </div>
+
+        <form id="encrypt" action="encryptAllFiles" method="POST">
+            <input type="hidden" name="encrypt" value="1">
+        </form>
+
+        <button onclick="document.getElementById('encrypt').submit()" class="btn btn-danger">Démarrer le chiffrement</button>
+
+
+{% endblock %}
